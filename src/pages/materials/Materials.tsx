@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebounce } from '../../shared/hooks';
 import {
-  debounce,
   Icon,
   IconButton,
   LinearProgress,
@@ -55,10 +54,6 @@ export const Materials: React.FC = () => {
       });
     });
   }, [busca, pagina]);
-
-  useEffect(() => {
-    console.log(totalCount);
-  }, [totalCount]);
 
   const handleDelete = (id: number) => {
     if (confirm('Realmente deseja apagar esse registro?')) {

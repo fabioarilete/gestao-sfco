@@ -24,11 +24,11 @@ const getAll = async (page = 1, filter = ''): Promise<TTotalCountMaterials | Err
 
     if (data) {
       // Verificação adicional para o cabeçalho x-total-count
-      if (headers['x-total-count']) {
-        console.log('Total Count do cabeçalho:', headers['x-total-count']);
-      } else {
-        console.error('Cabeçalho x-total-count não encontrado.');
-      }
+      // if (headers['x-total-count']) {
+      //   console.log('Total Count do cabeçalho:', headers['x-total-count']);
+      // } else {
+      //   console.error('Cabeçalho x-total-count não encontrado.');
+      // }
 
       return {
         data,
