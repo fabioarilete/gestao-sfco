@@ -1,0 +1,76 @@
+{
+  "materials": [
+    {
+      "id": 1,
+      "name": "PP PRETO",
+      "price": 5.5,
+      "unit": "kG"
+    },
+    {
+      "id": 2,
+      "name": "PP BRANCO",
+      "price": 7.5,
+      "unit": "kG"
+    },
+    {
+      "id": 3,
+      "name": "PP CORES",
+      "price": 6.5,
+      "unit": "kG"
+    },
+    {
+      "id": 4,
+      "name": "PP PRETO",
+      "price": 5.5,
+      "unit": "kG"
+    },
+    {
+      "id": 5,
+      "name": "PP BRANCO",
+      "price": 7.5,
+      "unit": "kG"
+    },
+    {
+      "id": 6,
+      "name": "PP CORES",
+      "price": 6.5,
+      "unit": "kG"
+    },
+    {
+      "id": 7,
+      "name": "PP PRETO",
+      "price": 5.5,
+      "unit": "kG"
+    },
+    {
+      "id": 8,
+      "name": "PP BRANCO",
+      "price": 7.5,
+      "unit": "kG"
+    },
+    {
+      "id": 9,
+      "name": "PP CORES",
+      "price": 6.5,
+      "unit": "kG"
+    },
+    {
+      "id": 10,
+      "name": "PP PRETO",
+      "price": 5.5,
+      "unit": "kG"
+    },
+    {
+      "id": 11,
+      "name": "PP BRANCO",
+      "price": 7.5,
+      "unit": "kG"
+    },
+    {
+      "id": 12,
+      "name": "PP CORES",
+      "price": 6.5,
+      "unit": "kG"
+    }
+  ]
+}
