@@ -1,76 +1,88 @@
 {
   "materials": [
     {
-      "id": 1,
+      "id": "fr4s",
       "name": "PP PRETO",
       "price": 5.5,
       "unit": "kG"
     },
     {
-      "id": 2,
+      "id": "rs34",
       "name": "PP BRANCO",
       "price": 7.5,
       "unit": "kG"
     },
     {
-      "id": 3,
+      "id": "opl8",
       "name": "PP CORES",
       "price": 6.5,
       "unit": "kG"
     },
     {
-      "id": 4,
+      "id": "45sr",
       "name": "PP PRETO",
       "price": 5.5,
       "unit": "kG"
     },
     {
-      "id": 5,
+      "id": "qt52",
       "name": "PP BRANCO",
       "price": 7.5,
       "unit": "kG"
     },
     {
-      "id": 6,
+      "id": "po9y",
       "name": "PP CORES",
       "price": 6.5,
       "unit": "kG"
     },
     {
-      "id": 7,
+      "id": "ydt5",
       "name": "PP PRETO",
       "price": 5.5,
       "unit": "kG"
     },
     {
-      "id": 8,
+      "id": "hdf5",
       "name": "PP BRANCO",
       "price": 7.5,
       "unit": "kG"
     },
     {
-      "id": 9,
+      "id": "sf53",
       "name": "PP CORES",
       "price": 6.5,
       "unit": "kG"
     },
     {
-      "id": 10,
+      "id": "hsgd",
       "name": "PP PRETO",
       "price": 5.5,
       "unit": "kG"
     },
     {
-      "id": 11,
+      "id": "ae35",
       "name": "PP BRANCO",
       "price": 7.5,
       "unit": "kG"
     },
     {
-      "id": 12,
+      "id": "tdge",
       "name": "PP CORES",
       "price": 6.5,
       "unit": "kG"
+    },
+    {
+      "unit": "UN",
+      "name": "Esponja Esfremax Tradicional leve 4 e pague 3",
+      "price": "50",
+      "id": "dAw89Ta"
+    },
+    {
+      "unit": "KG",
+      "name": "xuxu",
+      "price": "30",
+      "id": "qpSTBda"
     }
   ]
 }

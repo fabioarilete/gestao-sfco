@@ -2,7 +2,7 @@ import { Environment } from '../../shared/environments';
 import { Api } from '../../shared/services/api/axios-config';
 
 export interface IMaterial {
-  id: number;
+  id: string;
   name: string;
   price: number;
   unit: string;
@@ -45,7 +45,7 @@ const getAll = async (page = 1, filter = ''): Promise<TTotalCountMaterials | Err
   }
 };
 
-const getById = async (id: number): Promise<IMaterialDetail | Error> => {
+const getById = async (id: string): Promise<IMaterialDetail | Error> => {
   try {
     const { data } = await Api.get(`/materials/${id}`);
 
@@ -60,7 +60,7 @@ const getById = async (id: number): Promise<IMaterialDetail | Error> => {
   }
 };
 
-const create = async (dados: Omit<IMaterialDetail, 'id'>): Promise<number | Error> => {
+const create = async (dados: Omit<IMaterialDetail, 'id'>): Promise<string | Error> => {
   try {
     const { data } = await Api.post<IMaterialDetail>('/materials', dados);
 
@@ -75,7 +75,7 @@ const create = async (dados: Omit<IMaterialDetail, 'id'>): Promise<number | Erro
   }
 };
 
-const updateById = async (id: number, dados: IMaterialDetail): Promise<void | Error> => {
+const updateById = async (id: string, dados: IMaterialDetail): Promise<void | Error> => {
   try {
     await Api.put(`/materials/${id}`, dados);
   } catch (error) {
@@ -84,7 +84,7 @@ const updateById = async (id: number, dados: IMaterialDetail): Promise<void | Er
   }
 };
 
-const deleteById = async (id: number): Promise<void | Error> => {
+const deleteById = async (id: string): Promise<void | Error> => {
   try {
     await Api.delete(`/materials/${id}`);
   } catch (error) {

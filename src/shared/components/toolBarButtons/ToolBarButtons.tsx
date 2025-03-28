@@ -27,7 +27,7 @@ interface IToolBarButtonsProps {
   clickingInNew?: () => void;
   clickingInBack?: () => void;
   clickingInDelete?: () => void;
-  clickingInSave?: () => void;
+  clickingInSave?: () => Promise<void>;
 }
 
 export const ToolBarButtons: React.FC<IToolBarButtonsProps> = ({

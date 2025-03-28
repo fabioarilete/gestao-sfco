@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebounce } from '../../shared/hooks';
 import {
+  Box,
+  Button,
   Icon,
   IconButton,
   LinearProgress,
@@ -19,6 +21,7 @@ import { Environment } from '../../shared/environments';
 import { IMaterialsList, MaterialsService } from './MaterialsService';
 import { LayoutBase } from '../../shared/layouts';
 import { ToolBarSearch } from '../../shared/components';
+import formatCurrency from '../../shared/utils/formatCurrency';
 
 export const Materials: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -55,7 +58,7 @@ export const Materials: React.FC = () => {
     });
   }, [busca, pagina]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (confirm('Realmente deseja apagar esse registro?')) {
       MaterialsService.deleteById(id).then(res => {
         if (res instanceof Error) {
@@ -84,7 +87,7 @@ export const Materials: React.FC = () => {
       }
     >
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell>Descrição do Material</TableCell>
@@ -96,16 +99,21 @@ export const Materials: React.FC = () => {
           <TableBody>
             {rows.map(row => (
               <TableRow key={row.id}>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.price}</TableCell>
+                <TableCell>{row.name.toUpperCase()}</TableCell>
+                <TableCell>{formatCurrency(row.price, 'BRL')}</TableCell>
                 <TableCell>{row.unit}</TableCell>
                 <TableCell>
-                  <IconButton size="small" onClick={() => handleDelete(row.id)}>
-                    <Icon>delete</Icon>
-                  </IconButton>
-                  <IconButton size="small" onClick={() => navigate(`/materials/detalhe/${row.id}`)}>
-                    <Icon>edit</Icon>
-                  </IconButton>
+                  <Box display="flex">
+                    <Button sx={{ color: 'red' }} onClick={() => handleDelete(row.id)}>
+                      Apagar
+                    </Button>
+                    <Button
+                      sx={{ color: 'green' }}
+                      onClick={() => navigate(`/materials/detalhe/${row.id}`)}
+                    >
+                      Editar
+                    </Button>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}
