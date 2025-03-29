@@ -71,18 +71,36 @@
       "name": "PP CORES",
       "price": 6.5,
       "unit": "kG"
+    }
+  ],
+  "operations": [
+    {
+      "name": "MONTAGEM",
+      "valor": 50,
+      "unit": "HR",
+      "tipo": "Normal",
+      "id": 1
     },
     {
-      "unit": "UN",
-      "name": "Esponja Esfremax Tradicional leve 4 e pague 3",
-      "price": "50",
-      "id": "dAw89Ta"
+      "name": "INJETORA",
+      "valor": 120,
+      "unit": "HR",
+      "tipo": "Injeção",
+      "id": 2
     },
     {
-      "unit": "KG",
-      "name": "xuxu",
-      "price": "30",
-      "id": "qpSTBda"
+      "name": "TUFAGEM",
+      "valor": 100,
+      "unit": "HR",
+      "tipo": "Normal",
+      "id": 3
+    },
+    {
+      "name": "EMBALAGEM",
+      "valor": 50,
+      "unit": "HR",
+      "tipo": "Normal",
+      "id": 4
     }
   ]
 }

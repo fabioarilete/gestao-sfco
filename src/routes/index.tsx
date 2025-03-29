@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Dashboard, Materials, MaterialsForm } from '../pages';
+import { Dashboard, Materials, MaterialsForm, Operations, OperationsForm } from '../pages';
 import { useSidebarContext } from '../shared/contexts';
 import { useEffect } from 'react';
 
@@ -35,7 +35,9 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="/home" element={<Dashboard />} />
       <Route path="/materials" element={<Materials />} />
+      <Route path="/operations" element={<Operations />} />
       <Route path="/materials/detalhe/:id" element={<MaterialsForm />} />
+      <Route path="/operations/detalhe/:id" element={<OperationsForm />} />
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   );

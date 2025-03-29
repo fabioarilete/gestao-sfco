@@ -3,7 +3,6 @@ import { LayoutBase } from '../../shared/layouts';
 import { useEffect, useState } from 'react';
 import { ToolBarButtons } from '../../shared/components';
 import { Controller, useForm } from 'react-hook-form';
-import { MaterialsService } from './MaterialsService';
 import {
   Box,
   Grid,
@@ -15,16 +14,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { OperationsService } from './OperationsService';
 
-interface IMaterialForm {
+interface IOperationForm {
   id: string;
   name: string;
-  price: number;
+  valor: number;
   unit: string;
+  tipo: string;
 }
 
-export const MaterialsForm: React.FC = () => {
-  const { id = 'novo' } = useParams<'id'>();
+export const OperationsForm: React.FC = () => {
+  const { id = 'nova' } = useParams<'id'>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
@@ -35,69 +36,71 @@ export const MaterialsForm: React.FC = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<IMaterialForm>({
+  } = useForm<IOperationForm>({
     defaultValues: {
       name: '',
-      price: '' as any,
+      valor: '' as any,
       unit: '',
+      tipo: '',
     },
   });
 
   useEffect(() => {
-    if (id !== 'novo') {
+    if (id !== 'nova') {
       setIsLoading(true);
 
-      MaterialsService.getById(id).then(res => {
+      OperationsService.getById(id).then(res => {
         setIsLoading(false);
         if (res instanceof Error) {
           alert(res.message);
-          navigate('/materials');
+          navigate('/operations');
         } else {
           setValue('name', res.name);
-          setValue('price', res.price);
+          setValue('valor', res.valor);
           setValue('unit', res.unit);
+          setValue('tipo', res.tipo);
           setName(res.name);
         }
       });
     }
   }, [id]);
 
-  function handleSave(data: IMaterialForm) {
+  function handleSave(data: IOperationForm) {
     setIsLoading(true);
-    if (id === 'novo') {
-      MaterialsService.create(data).then(res => {
+    if (id === 'nova') {
+      OperationsService.create(data).then(res => {
         setIsLoading(false);
         if (res instanceof Error) {
           alert(res.message);
         } else {
-          navigate('/materials');
+          navigate('/operations');
         }
       });
     } else {
-      MaterialsService.updateById(id, { ...data }).then(res => {
+      OperationsService.updateById(id, { ...data }).then(res => {
         setIsLoading(false);
         if (res instanceof Error) {
           alert(res.message);
         } else {
-          navigate('/materials');
+          navigate('/operations');
         }
       });
     }
   }
 
-  function handleCreateMaterial(data: IMaterialForm) {
+  function handleCreateMaterial(data: IOperationForm) {
     handleSave(data);
     setName(data.name);
     alert(`${data.name} foi cadastrado com sucesso!`);
   }
   function handleDelete(id: string) {
-    if (confirm('Deseja realmente apagar esse material?')) {
-      MaterialsService.deleteById(id).then(res => {
+    if (confirm('Deseja realmente apagar essa operação?')) {
+      OperationsService.deleteById(id).then(res => {
         if (res instanceof Error) {
           alert(res.message);
         } else {
-          alert('Material apagado com sucesso!');
-          navigate('/materials');
+          alert('Operação apagado com sucesso!');
+          navigate('/operations');
         }
       });
     }
@@ -105,19 +108,19 @@ export const MaterialsForm: React.FC = () => {
 
   return (
     <LayoutBase
-      titulo={id === 'novo' ? 'Novo Material' : name}
+      titulo={id === 'nova' ? 'Nova Operação' : name}
       toolBar={
         <ToolBarButtons
-          textNewButton="Novo"
-          showNewButton={id !== 'novo'}
-          showDeleteButton={id !== 'novo'}
+          textNewButton="Nova"
+          showNewButton={id !== 'nova'}
+          showDeleteButton={id !== 'nova'}
           clickingInSave={handleSubmit(handleCreateMaterial)}
           clickingInDelete={() => handleDelete(id)}
           clickingInNew={() => {
-            navigate('/materials/detalhe/novo');
+            navigate('/operations/detalhe/nova');
           }}
           clickingInBack={() => {
-            navigate('/materials');
+            navigate('/operations');
           }}
         />
       }
@@ -127,13 +130,14 @@ export const MaterialsForm: React.FC = () => {
           <Grid>{isLoading && <LinearProgress variant="indeterminate" />}</Grid>
           <Grid container direction="column" padding={2} spacing={2}>
             <Grid>
-              <Typography variant="h5">Material</Typography>
-              <Typography variant="caption">Cadastre seu material</Typography>
+              <Typography variant="h5">Operação</Typography>
+              <Typography variant="caption">Cadastre sua operação</Typography>
             </Grid>
             <Grid direction="row">
               <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
-                <InputLabel>Descrição do Material</InputLabel>
+                <InputLabel>Descrição da operação</InputLabel>
                 <TextField
+                  size="small"
                   fullWidth
                   disabled={isLoading}
                   type="text"
@@ -152,16 +156,17 @@ export const MaterialsForm: React.FC = () => {
 
             <Grid direction="row">
               <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
-                <InputLabel>Preço</InputLabel>
+                <InputLabel>Valor</InputLabel>
                 <TextField
+                  size="small"
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('price', { required: true, valueAsNumber: true })}
+                  {...register('valor', { required: true, valueAsNumber: true })}
                 />
-                {errors?.price?.type === 'required' && (
+                {errors?.valor?.type === 'required' && (
                   <Typography variant="caption" sx={{ color: 'red' }}>
-                    Preço é obrigatório!
+                    Valor é obrigatório!
                   </Typography>
                 )}
               </Grid>
@@ -177,6 +182,7 @@ export const MaterialsForm: React.FC = () => {
                   rules={{ required: 'Unidade é obrigatória' }}
                   render={({ field }) => (
                     <Select
+                      size="small"
                       fullWidth
                       labelId="categoria-label"
                       {...field}
@@ -201,6 +207,37 @@ export const MaterialsForm: React.FC = () => {
                 {errors?.unit?.type === 'required' && (
                   <Typography variant="caption" sx={{ color: 'red' }}>
                     Unidade é obrigatória!
+                  </Typography>
+                )}
+              </Grid>
+            </Grid>
+
+            <Grid direction="row">
+              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+                <InputLabel>Tipo</InputLabel>
+
+                <Controller
+                  name="tipo"
+                  control={control}
+                  rules={{ required: 'Tipo é obrigatório' }}
+                  render={({ field }) => (
+                    <Select
+                      size="small"
+                      fullWidth
+                      labelId="categoria-label"
+                      {...field}
+                      onChange={e => field.onChange(e.target.value)}
+                      value={field.value}
+                    >
+                      <MenuItem value="">Selecione o tipo</MenuItem>
+                      <MenuItem value="Normal">Normal</MenuItem>
+                      <MenuItem value="Injeção">Injeção</MenuItem>
+                    </Select>
+                  )}
+                />
+                {errors?.unit?.type === 'required' && (
+                  <Typography variant="caption" sx={{ color: 'red' }}>
+                    Tipo é obrigatório!
                   </Typography>
                 )}
               </Grid>

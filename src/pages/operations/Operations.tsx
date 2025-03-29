@@ -16,17 +16,17 @@ import {
   TableRow,
 } from '@mui/material';
 import { Environment } from '../../shared/environments';
-import { IMaterialsList, MaterialsService } from './MaterialsService';
 import { LayoutBase } from '../../shared/layouts';
 import { ToolBarSearch } from '../../shared/components';
+import { IOperationsList, OperationsService } from './OperationsService';
 import formatCurrency from '../../shared/utils/formatCurrency';
 
-export const Materials: React.FC = () => {
+export const Operations: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
   const navigate = useNavigate();
 
-  const [rows, setRows] = useState<IMaterialsList[]>([]);
+  const [rows, setRows] = useState<IOperationsList[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,7 +42,7 @@ export const Materials: React.FC = () => {
     setIsLoading(true);
 
     debounce(() => {
-      MaterialsService.getAll(pagina, busca).then(res => {
+      OperationsService.getAll(pagina, busca).then(res => {
         setIsLoading(false);
 
         if (res instanceof Error) {
@@ -58,7 +58,7 @@ export const Materials: React.FC = () => {
 
   const handleDelete = (id: string) => {
     if (confirm('Realmente deseja apagar esse registro?')) {
-      MaterialsService.deleteById(id).then(res => {
+      OperationsService.deleteById(id).then(res => {
         if (res instanceof Error) {
           alert(res.message);
         } else {
@@ -73,13 +73,13 @@ export const Materials: React.FC = () => {
 
   return (
     <LayoutBase
-      titulo="Materiais"
+      titulo="Operações"
       toolBar={
         <ToolBarSearch
           showInput={true}
           searchText={busca}
-          textNewButton="Novo"
-          clickingNewButton={() => navigate('/materials/detalhe/novo')}
+          textNewButton="Nova"
+          clickingNewButton={() => navigate('/operations/detalhe/nova')}
           changingText={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
         />
       }
@@ -88,9 +88,10 @@ export const Materials: React.FC = () => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Descrição do Material</TableCell>
-              <TableCell align="center">Preço</TableCell>
+              <TableCell align="center">Descrição da operação</TableCell>
+              <TableCell align="center">Valor</TableCell>
               <TableCell align="center">Unidade</TableCell>
+              <TableCell align="center">Tipo</TableCell>
               <TableCell align="center">Ações</TableCell>
             </TableRow>
           </TableHead>
@@ -99,9 +100,10 @@ export const Materials: React.FC = () => {
               <TableRow key={row.id}>
                 <TableCell>{row.name.toUpperCase()}</TableCell>
                 <TableCell align="right" sx={{ paddingRight: 4 }}>
-                  {formatCurrency(row.price, 'BRL')}
+                  {formatCurrency(row.valor, 'BRL')}
                 </TableCell>
                 <TableCell align="center">{row.unit}</TableCell>
+                <TableCell align="center">{row.tipo}</TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button sx={{ color: 'red' }} onClick={() => handleDelete(row.id)}>
@@ -109,7 +111,7 @@ export const Materials: React.FC = () => {
                     </Button>
                     <Button
                       sx={{ color: 'green' }}
-                      onClick={() => navigate(`/materials/detalhe/${row.id}`)}
+                      onClick={() => navigate(`/operations/detalhe/${row.id}`)}
                     >
                       Editar
                     </Button>
