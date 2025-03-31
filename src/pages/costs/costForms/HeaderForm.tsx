@@ -150,9 +150,9 @@ export const HeaderForm = () => {
               justifyContent="end"
               alignItems="center"
             >
-              <label style={{ marginRight: '5px' }} htmlFor="">
+              <Typography>
                 Sfco x STza:
-              </label>
+              </Typography>
               <Controller
                 name="sf_st"
                 control={control}

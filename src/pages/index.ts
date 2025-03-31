@@ -13,3 +13,6 @@ export * from './costs/CostService';
 export * from './costs/CostSheet';
 export * from './costs/CostsForm';
 export * from './costs/costForms/HeaderForm';
+export * from './costs/costForms/MaterialsSheet'
+export * from './costs/costForms/NormalOperationsSheet'
+export * from './costs/costForms/AddMaterialDialog'

@@ -20,6 +20,7 @@ import { IMaterialsList, MaterialsService } from './MaterialsService';
 import { LayoutBase } from '../../shared/layouts';
 import { ToolBarSearch } from '../../shared/components';
 import formatCurrency from '../../shared/utils/formatCurrency';
+import { indigo } from '@mui/material/colors';
 
 export const Materials: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -86,12 +87,20 @@ export const Materials: React.FC = () => {
     >
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead>
+          <TableHead sx={{ backgroundColor: 'indigo' }}>
             <TableRow>
-              <TableCell align="center">Descrição do Material</TableCell>
-              <TableCell align="center">Preço</TableCell>
-              <TableCell align="center">Unidade</TableCell>
-              <TableCell align="center">Ações</TableCell>
+              <TableCell sx={{ color: 'white' }} align="center">
+                Descrição do Material
+              </TableCell>
+              <TableCell sx={{ color: 'white' }} align="center">
+                Preço
+              </TableCell>
+              <TableCell sx={{ color: 'white' }} align="center">
+                Unidade
+              </TableCell>
+              <TableCell sx={{ color: 'white' }} align="center">
+                Ações
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
