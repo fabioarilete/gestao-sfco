@@ -1,5 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Dashboard, Materials, MaterialsForm, Operations, OperationsForm } from '../pages';
+import {
+  CostsForm,
+  Dashboard,
+  Materials,
+  MaterialsForm,
+  Operations,
+  OperationsForm,
+  Products,
+} from '../pages';
 import { useSidebarContext } from '../shared/contexts';
 import { useEffect } from 'react';
 
@@ -36,8 +44,10 @@ export const AppRoutes = () => {
       <Route path="/home" element={<Dashboard />} />
       <Route path="/materials" element={<Materials />} />
       <Route path="/operations" element={<Operations />} />
+      <Route path="/products" element={<Products />} />
       <Route path="/materials/detalhe/:id" element={<MaterialsForm />} />
       <Route path="/operations/detalhe/:id" element={<OperationsForm />} />
+      <Route path="/costs/detalhe/:id" element={<CostsForm />} />
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   );
