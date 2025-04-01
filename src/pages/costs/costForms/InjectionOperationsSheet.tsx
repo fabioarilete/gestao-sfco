@@ -11,71 +11,84 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { MdDeleteForever } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
 import formatCurrency from '../../../shared/utils/formatCurrency';
-import { AddInjectionOperationsDialog } from './AddInjectionOperationsDialog';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { CostInjectionOperations, ICost } from '../CostService';
+import { AddInjectionOperationsDialog } from './AddInjectionOperationsDialog';
 
-export const InjectionOperationsSheet = () => {
-  const navigate = useNavigate();
-  const [rowsOperation, setRowsOperation] = useState<CostInjectionOperations[]>([]);
-  const [open, setOpen] = useState(false);
-
+export const InjectionOperationsSheet: React.FC = () => {
   const methods = useForm<ICost>({
     defaultValues: {
-      normalOperationsProduct: [],
+      injectionOperationsProduct: [],
       totalInjectionOperations: 0,
     },
   });
 
-  const { control, handleSubmit, watch, setValue } = methods;
+  const { control, watch, setValue } = methods;
   const {
     fields: operations,
     append: appendOperation,
     remove: removeOperation,
+    update: updateOperation,
   } = useFieldArray({
     control,
-    name: 'injectionOperationsProduct', // Corrigido o nome do campo
+    name: 'injectionOperationsProduct',
   });
 
   const injectionOperations = watch('injectionOperationsProduct');
-
-  useEffect(() => {
-    // Calcular o total das operações normais
-    const totalInjectionOperations =
-      injectionOperations?.reduce(
-        (sum, item) => sum + (item.totalItemInjectionOperation || 0),
-        0,
-      ) || 0;
-
-    // Atualizar o valor no formulário
-    setValue('totalInjectionOperations', totalInjectionOperations);
-  }, [injectionOperations, setValue]);
+  const [operationToEdit, setOperationToEdit] = React.useState<{
+    operation: CostInjectionOperations;
+    index: number;
+  } | null>(null);
+  const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
+    setOperationToEdit(null);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setOperationToEdit(null);
   };
 
   const handleAddInjectionOperation = (operation: CostInjectionOperations) => {
-    appendOperation(operation); // Adicionar a operação ao array do formulário
+    if (operationToEdit) {
+      updateOperation(operationToEdit.index, operation);
+    } else {
+      appendOperation(operation);
+    }
   };
 
-  const handleDelete = (id: string) => {};
+  const handleDelete = (index: number) => {
+    if (window.confirm('Tem certeza que deseja remover esta operação?')) {
+      removeOperation(index);
+    }
+  };
+
+  const handleEdit = (operation: CostInjectionOperations, index: number) => {
+    setOperationToEdit({ operation, index });
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    const totalInjectionOperations = injectionOperations.reduce(
+      (sum, item) => sum + (item.totalItemInjectionOperation || 0),
+      0,
+    );
+    setValue('totalInjectionOperations', totalInjectionOperations);
+  }, [injectionOperations, setValue]);
+
   return (
     <Box padding={2} gap={2}>
       <Box display="flex" flexDirection="row" justifyContent="space-between" marginRight={1}>
         <Typography
           marginLeft={1}
           fontWeight="bold"
-          bgcolor="#e49330"
+          bgcolor="#d9ab20"
           color="white"
           paddingX={2}
           variant="h5"
@@ -99,6 +112,7 @@ export const InjectionOperationsSheet = () => {
           </Typography>
         </Button>
         <AddInjectionOperationsDialog
+          operationToEdit={operationToEdit}
           open={open}
           onClose={handleClose}
           onAdd={handleAddInjectionOperation}
@@ -106,41 +120,59 @@ export const InjectionOperationsSheet = () => {
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: '#e49330' }}>
+          <TableHead sx={{ backgroundColor: '#d9ab20' }}>
             <TableRow>
-              <TableCell align="center">Descrição da operação</TableCell>
-              <TableCell align="center">Observação</TableCell>
-              <TableCell align="center">Cavidades</TableCell>
-              <TableCell align="center">Ciclo</TableCell>
-              <TableCell align="center">Valor Hora</TableCell>
-              <TableCell align="center">Valor Total</TableCell>
-              <TableCell align="center">Ações</TableCell>
+              <TableCell align="center">
+                <Typography color="white">Descrição da Operação</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Observação</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Quant/HR</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Cav.</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Ciclo</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Valor/Hora</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Custo por Item</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Ações</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {operations.map(operation => (
-              <TableRow key={operation.id}>
-                <TableCell>{operation.name.toUpperCase()}</TableCell>
-                <TableCell>{operation.obs.toUpperCase()}</TableCell>
-                <TableCell>{operation.cav}</TableCell>
-                <TableCell>{operation.ciclo}</TableCell>
-                <TableCell>{formatCurrency(operation.valor, 'BRL')}</TableCell>
-                <TableCell>
-                  {formatCurrency(operation.totalItemInjectionOperation, 'BRL')}
-                </TableCell>
+            {operations.map((row, index) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.name.toUpperCase()}</TableCell>
+                <TableCell>{row.obs.toUpperCase()}</TableCell>
+                <TableCell>{row.qt}</TableCell>
+                <TableCell>{row.cav}</TableCell>
+                <TableCell>{row.ciclo}</TableCell>
+                <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
+                <TableCell>{formatCurrency(row.totalItemInjectionOperation, 'BRL')}</TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button
-                      title="Apagar o produto"
+                      title="Apagar a operação"
                       sx={{ color: 'red' }}
-                      onClick={() => handleDelete(operation.id)}
+                      onClick={() => handleDelete(index)}
+                      aria-label="Apagar operação"
                     >
                       <MdDeleteForever />
                     </Button>
                     <Button
-                      title="Editar o produto"
-                      sx={{ color: 'orange' }}
-                      onClick={() => navigate(`/products/detalhe/${operation.id}`)}
+                      title="Editar a operação"
+                      sx={{ color: 'green' }}
+                      onClick={() => handleEdit(row, index)}
+                      aria-label="Editar operação"
                     >
                       <FaEdit />
                     </Button>
@@ -152,12 +184,12 @@ export const InjectionOperationsSheet = () => {
         </Table>
       </TableContainer>
       <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
-        <Typography paddingX={5} bgcolor="#e49330" variant="h6">
+        <Typography paddingX={5} bgcolor="#d9ab20" variant="h6" color="white">
           Total de Operações de Injeção
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor="#e49330">
+        <Box display="flex" right={0} border={1} borderColor="#d9ab20">
           <Typography paddingX={5} variant="h6">
-            {formatCurrency(watch('totalInjectionOperations'), 'BRL')}
+            {}
           </Typography>
         </Box>
       </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -13,19 +13,20 @@ import {
   Box,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
-import { CostOperations } from '../CostService'; // Ajuste o caminho conforme necessário
 import { SelectOptions } from '../../../shared/components';
+import { CostNormalOperations } from '../CostService';
 
 interface AddNormalOperationsDialogProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (operation: CostOperations) => void;
+  onAdd: (operation: CostNormalOperations) => void;
+  operationToEdit?: { operation: CostNormalOperations; index: number } | null; // Nova prop para edição
 }
 
 interface FormData {
   name: string;
   obs: string;
-  qt?: number;
+  qt: number;
   cav?: number;
   ciclo?: number;
   valor: number;
@@ -35,19 +36,23 @@ export const AddNormalOperationsDialog: React.FC<AddNormalOperationsDialogProps>
   open,
   onClose,
   onAdd,
+  operationToEdit,
 }) => {
   const {
     control,
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
       name: '',
       obs: '',
-      qt: '' as any,
-      valor: '' as any,
+      qt: 0,
+      cav: 0,
+      ciclo: 0,
+      valor: 0,
     },
     mode: 'onChange', // Validação em tempo real
   });
@@ -56,6 +61,28 @@ export const AddNormalOperationsDialog: React.FC<AddNormalOperationsDialogProps>
   const [isLoading, setIsLoading] = useState(false);
 
   const Grid = MuiGrid as React.FC<GridProps>;
+
+  // Preencher o formulário com os dados da operação a ser editada
+  useEffect(() => {
+    if (operationToEdit) {
+      const { operation } = operationToEdit;
+      setValue('name', operation.name);
+      setValue('obs', operation.obs);
+      setValue('qt', operation.qt);
+      setValue('cav', operation.cav);
+      setValue('ciclo', operation.ciclo);
+      setValue('valor', operation.valor);
+    } else {
+      reset({
+        name: '',
+        obs: '',
+        qt: 0,
+        cav: 0,
+        ciclo: 0,
+        valor: 0,
+      });
+    }
+  }, [operationToEdit, setValue, reset]);
 
   const fetchOperationData = async (operationName: string) => {
     if (operationCache.has(operationName)) {
@@ -67,38 +94,51 @@ export const AddNormalOperationsDialog: React.FC<AddNormalOperationsDialogProps>
     setIsLoading(true);
     try {
       const response = await fetch(`http://localhost:5000/operations?name=${operationName}`);
+      if (!response.ok) {
+        throw new Error('Erro ao buscar operação');
+      }
       const data = await response.json();
       if (data && data.length > 0) {
         const operation = data[0];
         setValue('valor', operation.valor);
         setOperationCache(prev => new Map(prev).set(operationName, { valor: operation.valor }));
+      } else {
+        alert('Operação não encontrada.');
       }
     } catch (error) {
-      console.error('Erro ao buscar dados do material:', error);
+      console.error('Erro ao buscar dados da operação:', error);
+      alert('Erro ao buscar dados da operação. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Calcular o totalItemNormalOperation em tempo real
+  const qt = watch('qt');
+  const valor = watch('valor');
+  const totalItemNormalOperation = qt > 0 ? valor / qt : 0;
+
   const onSubmit = (data: FormData) => {
-    const newOperation: CostOperations = {
-      id: Date.now().toString(),
+    const newOperation: CostNormalOperations = {
+      id: operationToEdit ? operationToEdit.operation.id : Date.now().toString(),
       name: data.name,
       obs: data.obs,
-      qt: Number(data.qt),
+      qt: data.qt,
+      cav: data.cav || 0, // Garantir que cav seja 0 se não preenchido
+      ciclo: data.ciclo || 0, // Garantir que ciclo seja 0 se não preenchido
       valor: data.valor,
-      cav: Number(data.cav),
-      ciclo: Number(data.ciclo),
-      totalItemOperation: data.valor / Number(data.qt),
+      totalItemNormalOperation: data.qt > 0 ? data.valor / data.qt : 0,
     };
     onAdd(newOperation);
     reset();
     onClose();
   };
 
+  const isEditMode = !!operationToEdit;
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Adicionar Nova operação</DialogTitle>
+      <DialogTitle>{isEditMode ? 'Editar Operação' : 'Adicionar Nova Operação'}</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Grid container spacing={2} display="flex" flexDirection="column">
@@ -139,6 +179,7 @@ export const AddNormalOperationsDialog: React.FC<AddNormalOperationsDialogProps>
                 control={control}
                 rules={{
                   required: 'Quantidade é obrigatória',
+                  min: { value: 1, message: 'Deve ser maior que 0' },
                 }}
                 render={({ field }) => (
                   <TextField
@@ -179,6 +220,16 @@ export const AddNormalOperationsDialog: React.FC<AddNormalOperationsDialogProps>
                 )}
               />
             </Grid>
+            <Grid>
+              <TextField
+                label="Custo por Item"
+                type="number"
+                fullWidth
+                value={totalItemNormalOperation.toFixed(2)}
+                InputProps={{ readOnly: true }}
+                variant="outlined"
+              />
+            </Grid>
           </Grid>
         </DialogContent>
         <Box display="flex" justifyContent="center">
@@ -187,7 +238,7 @@ export const AddNormalOperationsDialog: React.FC<AddNormalOperationsDialogProps>
               Cancelar
             </Button>
             <Button type="submit" color="primary" variant="outlined">
-              Adicionar
+              {isEditMode ? 'Salvar Alterações' : 'Adicionar'}
             </Button>
           </DialogActions>
         </Box>

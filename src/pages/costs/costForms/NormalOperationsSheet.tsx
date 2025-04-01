@@ -14,13 +14,12 @@ import {
 import React, { useEffect } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { MdDeleteForever } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
 import formatCurrency from '../../../shared/utils/formatCurrency';
 import { AddNormalOperationsDialog } from './AddNormalOperationsDialog';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { CostNormalOperations, ICost } from '../CostService';
 
-export const NormalOperationsSheet = () => {
+export const NormalOperationsSheet: React.FC = () => {
   const methods = useForm<ICost>({
     defaultValues: {
       normalOperationsProduct: [],
@@ -28,43 +27,58 @@ export const NormalOperationsSheet = () => {
     },
   });
 
-  const navigate = useNavigate();
-  const { control, handleSubmit, watch, setValue } = methods;
+  const { control, watch, setValue } = methods;
   const {
     fields: operations,
     append: appendOperation,
     remove: removeOperation,
+    update: updateOperation,
   } = useFieldArray({
     control,
-    name: 'normalOperationsProduct', // Corrigido o nome do campo
+    name: 'normalOperationsProduct',
   });
 
   const normalOperations = watch('normalOperationsProduct');
+  const [operationToEdit, setOperationToEdit] = React.useState<{
+    operation: CostNormalOperations;
+    index: number;
+  } | null>(null);
+  const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
+    setOperationToEdit(null);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setOperationToEdit(null);
   };
 
-  const [open, setOpen] = React.useState(false);
-
   const handleAddNormalOperation = (operation: CostNormalOperations) => {
-    appendOperation(operation); // Adicionar a operação ao array do formulário
+    if (operationToEdit) {
+      updateOperation(operationToEdit.index, operation);
+    } else {
+      appendOperation(operation);
+    }
   };
 
   const handleDelete = (index: number) => {
-    removeOperation(index); // Remover a operação do array do formulário
+    if (window.confirm('Tem certeza que deseja remover esta operação?')) {
+      removeOperation(index);
+    }
+  };
+
+  const handleEdit = (operation: CostNormalOperations, index: number) => {
+    setOperationToEdit({ operation, index });
+    setOpen(true);
   };
 
   useEffect(() => {
-    // Calcular o total das operações normais
-    const totalNormalOperations =
-      normalOperations?.reduce((sum, item) => sum + (item.totalItemNormalOperation || 0), 0) || 0;
-
-    // Atualizar o valor no formulário
+    const totalNormalOperations = normalOperations.reduce(
+      (sum, item) => sum + (item.totalItemNormalOperation || 0),
+      0,
+    );
     setValue('totalNormalOperations', totalNormalOperations);
   }, [normalOperations, setValue]);
 
@@ -98,6 +112,7 @@ export const NormalOperationsSheet = () => {
           </Typography>
         </Button>
         <AddNormalOperationsDialog
+          operationToEdit={operationToEdit}
           open={open}
           onClose={handleClose}
           onAdd={handleAddNormalOperation}
@@ -108,7 +123,7 @@ export const NormalOperationsSheet = () => {
           <TableHead sx={{ backgroundColor: '#5e5ee1' }}>
             <TableRow>
               <TableCell align="center">
-                <Typography color="white">Descrição da operação</Typography>
+                <Typography color="white">Descrição da Operação</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Observação</Typography>
@@ -117,10 +132,16 @@ export const NormalOperationsSheet = () => {
                 <Typography color="white">Quant/HR</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Valor Hora</Typography>
+                <Typography color="white">Cav.</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Valor Total</Typography>
+                <Typography color="white">Ciclo</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Valor/Hora</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Custo por Item</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Ações</Typography>
@@ -133,6 +154,8 @@ export const NormalOperationsSheet = () => {
                 <TableCell>{row.name.toUpperCase()}</TableCell>
                 <TableCell>{row.obs.toUpperCase()}</TableCell>
                 <TableCell>{row.qt}</TableCell>
+                <TableCell>{row.cav}</TableCell>
+                <TableCell>{row.ciclo}</TableCell>
                 <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
                 <TableCell>{formatCurrency(row.totalItemNormalOperation, 'BRL')}</TableCell>
                 <TableCell align="center">
@@ -141,13 +164,15 @@ export const NormalOperationsSheet = () => {
                       title="Apagar a operação"
                       sx={{ color: 'red' }}
                       onClick={() => handleDelete(index)}
+                      aria-label="Apagar operação"
                     >
                       <MdDeleteForever />
                     </Button>
                     <Button
                       title="Editar a operação"
                       sx={{ color: 'green' }}
-                      onClick={() => navigate(`/products/detalhe/${row.id}`)}
+                      onClick={() => handleEdit(row, index)}
+                      aria-label="Editar operação"
                     >
                       <FaEdit />
                     </Button>

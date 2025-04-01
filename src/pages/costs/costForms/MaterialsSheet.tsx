@@ -16,7 +16,6 @@ import { MdDeleteForever } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import React, { useEffect } from 'react';
 import { CostMaterial, ICost } from '../CostService';
-import { useNavigate } from 'react-router-dom';
 import { AddMaterialDialog } from './AddMaterialDialog';
 import { useFieldArray, useForm } from 'react-hook-form';
 
@@ -28,35 +27,53 @@ export const MaterialsSheet: React.FC = () => {
     },
   });
 
-  const navigate = useNavigate();
   const { control, watch, setValue } = methods;
   const {
     fields: materials,
     append: appendMaterial,
     remove: removeMaterial,
+    update: updateMaterial,
   } = useFieldArray({
     control,
     name: 'materialsProduct',
   });
 
   const materialsProduct = watch('materialsProduct');
-
+  const [materialToEdit, setMaterialToEdit] = React.useState<{
+    material: CostMaterial;
+    index: number;
+  } | null>(null);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
+    setMaterialToEdit(null); // Limpar o material a ser editado ao abrir para adicionar
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setMaterialToEdit(null); // Limpar o material a ser editado ao fechar
   };
 
   const handleAddMaterial = (material: CostMaterial) => {
-    appendMaterial(material);
+    if (materialToEdit) {
+      // Modo de edição: atualizar o material existente
+      updateMaterial(materialToEdit.index, material);
+    } else {
+      // Modo de adição: adicionar um novo material
+      appendMaterial(material);
+    }
   };
 
   const handleDelete = (index: number) => {
-    removeMaterial(index);
+    if (window.confirm('Tem certeza que deseja remover este material?')) {
+      removeMaterial(index);
+    }
+  };
+
+  const handleEdit = (material: CostMaterial, index: number) => {
+    setMaterialToEdit({ material, index }); // Definir o material a ser editado
+    setOpen(true);
   };
 
   useEffect(() => {
@@ -97,7 +114,12 @@ export const MaterialsSheet: React.FC = () => {
             Adicionar Material
           </Typography>
         </Button>
-        <AddMaterialDialog open={open} onClose={handleClose} onAdd={handleAddMaterial} />
+        <AddMaterialDialog
+          materialToEdit={materialToEdit}
+          open={open}
+          onClose={handleClose}
+          onAdd={handleAddMaterial}
+        />
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
@@ -147,7 +169,7 @@ export const MaterialsSheet: React.FC = () => {
                     <Button
                       title="Editar o material"
                       sx={{ color: 'green' }}
-                      onClick={() => navigate(`/products/detalhe/${row.id}`)}
+                      onClick={() => handleEdit(row, index)}
                     >
                       <FaEdit />
                     </Button>
