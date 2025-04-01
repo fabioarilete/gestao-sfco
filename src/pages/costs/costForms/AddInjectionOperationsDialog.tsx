@@ -42,7 +42,7 @@ export const AddInjectionOperationsDialog: React.FC<AddInjectionOperationsDialog
     handleSubmit,
     reset,
     setValue,
-    watch,
+    // watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -110,7 +110,7 @@ export const AddInjectionOperationsDialog: React.FC<AddInjectionOperationsDialog
   };
 
   // Calcular o totalItemNormalOperation em tempo real
-  const valor = watch('valor');
+  // const valor = watch('valor');
   const totalItemInjectionOperation = 0;
 
   const onSubmit = (data: FormData) => {

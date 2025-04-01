@@ -88,7 +88,7 @@ export const InjectionOperationsSheet: React.FC = () => {
         <Typography
           marginLeft={1}
           fontWeight="bold"
-          bgcolor="#d9ab20"
+          bgcolor="#ef6318"
           color="white"
           paddingX={2}
           variant="h5"
@@ -120,16 +120,13 @@ export const InjectionOperationsSheet: React.FC = () => {
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: '#d9ab20' }}>
+          <TableHead sx={{ backgroundColor: '#ef6318' }}>
             <TableRow>
               <TableCell align="center">
                 <Typography color="white">Descrição da Operação</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Observação</Typography>
-              </TableCell>
-              <TableCell align="center">
-                <Typography color="white">Quant/HR</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Cav.</Typography>
@@ -153,7 +150,6 @@ export const InjectionOperationsSheet: React.FC = () => {
               <TableRow key={row.id}>
                 <TableCell>{row.name.toUpperCase()}</TableCell>
                 <TableCell>{row.obs.toUpperCase()}</TableCell>
-                <TableCell>{row.qt}</TableCell>
                 <TableCell>{row.cav}</TableCell>
                 <TableCell>{row.ciclo}</TableCell>
                 <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
@@ -184,10 +180,10 @@ export const InjectionOperationsSheet: React.FC = () => {
         </Table>
       </TableContainer>
       <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
-        <Typography paddingX={5} bgcolor="#d9ab20" variant="h6" color="white">
+        <Typography paddingX={5} bgcolor="#ef6318" variant="h6" color="white">
           Total de Operações de Injeção
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor="#d9ab20">
+        <Box display="flex" right={0} border={1} borderColor="#ef6318">
           <Typography paddingX={5} variant="h6">
             {}
           </Typography>

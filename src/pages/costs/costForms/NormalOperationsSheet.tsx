@@ -132,12 +132,6 @@ export const NormalOperationsSheet: React.FC = () => {
                 <Typography color="white">Quant/HR</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Cav.</Typography>
-              </TableCell>
-              <TableCell align="center">
-                <Typography color="white">Ciclo</Typography>
-              </TableCell>
-              <TableCell align="center">
                 <Typography color="white">Valor/Hora</Typography>
               </TableCell>
               <TableCell align="center">
@@ -154,8 +148,6 @@ export const NormalOperationsSheet: React.FC = () => {
                 <TableCell>{row.name.toUpperCase()}</TableCell>
                 <TableCell>{row.obs.toUpperCase()}</TableCell>
                 <TableCell>{row.qt}</TableCell>
-                <TableCell>{row.cav}</TableCell>
-                <TableCell>{row.ciclo}</TableCell>
                 <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
                 <TableCell>{formatCurrency(row.totalItemNormalOperation, 'BRL')}</TableCell>
                 <TableCell align="center">
