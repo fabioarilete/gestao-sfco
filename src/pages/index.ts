@@ -15,5 +15,7 @@ export * from './costs/CostsForm';
 export * from './costs/costForms/HeaderForm';
 export * from './costs/costForms/MaterialsSheet';
 export * from './costs/costForms/NormalOperationsSheet';
+export * from './costs/costForms/InjectionOperationsSheet';
 export * from './costs/costForms/AddMaterialDialog';
 export * from './costs/costForms/AddNormalOperationsDialog';
+export * from './costs/costForms/AddInjectionOperationsDialog';

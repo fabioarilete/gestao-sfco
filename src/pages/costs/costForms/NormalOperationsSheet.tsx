@@ -15,10 +15,10 @@ import React, { useEffect } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { MdDeleteForever } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { CostOperations, ICost } from '../CostService';
 import formatCurrency from '../../../shared/utils/formatCurrency';
 import { AddNormalOperationsDialog } from './AddNormalOperationsDialog';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { CostNormalOperations, ICost } from '../CostService';
 
 export const NormalOperationsSheet = () => {
   const methods = useForm<ICost>({
@@ -51,7 +51,7 @@ export const NormalOperationsSheet = () => {
 
   const [open, setOpen] = React.useState(false);
 
-  const handleAddNormalOperation = (operation: CostOperations) => {
+  const handleAddNormalOperation = (operation: CostNormalOperations) => {
     appendOperation(operation); // Adicionar a operação ao array do formulário
   };
 
@@ -62,7 +62,7 @@ export const NormalOperationsSheet = () => {
   useEffect(() => {
     // Calcular o total das operações normais
     const totalNormalOperations =
-      normalOperations?.reduce((sum, item) => sum + (item.totalItemOperation || 0), 0) || 0;
+      normalOperations?.reduce((sum, item) => sum + (item.totalItemNormalOperation || 0), 0) || 0;
 
     // Atualizar o valor no formulário
     setValue('totalNormalOperations', totalNormalOperations);
@@ -134,7 +134,7 @@ export const NormalOperationsSheet = () => {
                 <TableCell>{row.obs.toUpperCase()}</TableCell>
                 <TableCell>{row.qt}</TableCell>
                 <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
-                <TableCell>{formatCurrency(row.totalItemOperation, 'BRL')}</TableCell>
+                <TableCell>{formatCurrency(row.totalItemNormalOperation, 'BRL')}</TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button

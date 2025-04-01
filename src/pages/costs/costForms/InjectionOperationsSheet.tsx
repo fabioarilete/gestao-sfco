@@ -11,16 +11,62 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { MdDeleteForever } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { CostOperations } from '../CostService';
 import formatCurrency from '../../../shared/utils/formatCurrency';
+import { AddInjectionOperationsDialog } from './AddInjectionOperationsDialog';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { CostInjectionOperations, ICost } from '../CostService';
 
 export const InjectionOperationsSheet = () => {
   const navigate = useNavigate();
-  const [rowsOperation, setRowsOperation] = useState<CostOperations[]>([]);
+  const [rowsOperation, setRowsOperation] = useState<CostInjectionOperations[]>([]);
+  const [open, setOpen] = useState(false);
+
+  const methods = useForm<ICost>({
+    defaultValues: {
+      normalOperationsProduct: [],
+      totalInjectionOperations: 0,
+    },
+  });
+
+  const { control, handleSubmit, watch, setValue } = methods;
+  const {
+    fields: operations,
+    append: appendOperation,
+    remove: removeOperation,
+  } = useFieldArray({
+    control,
+    name: 'injectionOperationsProduct', // Corrigido o nome do campo
+  });
+
+  const injectionOperations = watch('injectionOperationsProduct');
+
+  useEffect(() => {
+    // Calcular o total das operações normais
+    const totalInjectionOperations =
+      injectionOperations?.reduce(
+        (sum, item) => sum + (item.totalItemInjectionOperation || 0),
+        0,
+      ) || 0;
+
+    // Atualizar o valor no formulário
+    setValue('totalInjectionOperations', totalInjectionOperations);
+  }, [injectionOperations, setValue]);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleAddInjectionOperation = (operation: CostInjectionOperations) => {
+    appendOperation(operation); // Adicionar a operação ao array do formulário
+  };
 
   const handleDelete = (id: string) => {};
   return (
@@ -36,7 +82,13 @@ export const InjectionOperationsSheet = () => {
         >
           Operações de Injeção
         </Typography>
-        <Button variant="outlined" color="primary" disableElevation startIcon={<Icon>add</Icon>}>
+        <Button
+          onClick={handleOpen}
+          variant="outlined"
+          color="primary"
+          disableElevation
+          startIcon={<Icon>add</Icon>}
+        >
           <Typography
             variant="button"
             whiteSpace="nowrap"
@@ -46,6 +98,11 @@ export const InjectionOperationsSheet = () => {
             Adicionar Operação
           </Typography>
         </Button>
+        <AddInjectionOperationsDialog
+          open={open}
+          onClose={handleClose}
+          onAdd={handleAddInjectionOperation}
+        />
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
@@ -61,27 +118,29 @@ export const InjectionOperationsSheet = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rowsOperation.map(row => (
-              <TableRow key={row.id}>
-                <TableCell>{row.name.toUpperCase()}</TableCell>
-                <TableCell>{row.obs.toUpperCase()}</TableCell>
-                <TableCell>{row.qt}</TableCell>
-                <TableCell>{row.unit.toUpperCase()}</TableCell>
-                <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
-                <TableCell>{formatCurrency(row.totalItemOperation, 'BRL')}</TableCell>
+            {operations.map(operation => (
+              <TableRow key={operation.id}>
+                <TableCell>{operation.name.toUpperCase()}</TableCell>
+                <TableCell>{operation.obs.toUpperCase()}</TableCell>
+                <TableCell>{operation.cav}</TableCell>
+                <TableCell>{operation.ciclo}</TableCell>
+                <TableCell>{formatCurrency(operation.valor, 'BRL')}</TableCell>
+                <TableCell>
+                  {formatCurrency(operation.totalItemInjectionOperation, 'BRL')}
+                </TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button
                       title="Apagar o produto"
                       sx={{ color: 'red' }}
-                      onClick={() => handleDelete(row.id)}
+                      onClick={() => handleDelete(operation.id)}
                     >
                       <MdDeleteForever />
                     </Button>
                     <Button
                       title="Editar o produto"
                       sx={{ color: 'orange' }}
-                      onClick={() => navigate(`/products/detalhe/${row.id}`)}
+                      onClick={() => navigate(`/products/detalhe/${operation.id}`)}
                     >
                       <FaEdit />
                     </Button>
@@ -98,7 +157,7 @@ export const InjectionOperationsSheet = () => {
         </Typography>
         <Box display="flex" right={0} border={1} borderColor="#e49330">
           <Typography paddingX={5} variant="h6">
-            {'R$ 150,00'}
+            {formatCurrency(watch('totalInjectionOperations'), 'BRL')}
           </Typography>
         </Box>
       </Box>

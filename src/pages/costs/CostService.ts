@@ -11,12 +11,17 @@ export interface CostMaterial extends IMaterial {
   id: string;
 }
 
-export interface CostOperations extends IOperation {
-  totalItemOperation: number;
+export interface CostNormalOperations extends IOperation {
+  totalItemNormalOperation: number;
   obs: string;
-  qt?: number;
-  cav?: number;
-  ciclo?: number;
+  qt: number;
+  id: string;
+}
+export interface CostInjectionOperations extends IOperation {
+  totalItemInjectionOperation: number;
+  obs: string;
+  cav: number;
+  ciclo: number;
   id: string;
 }
 
@@ -35,8 +40,8 @@ export interface ICost {
   totalCost: number;
   unitCost: number;
   materialsProduct: CostMaterial[];
-  normalOperationsProduct: CostOperations[];
-  injectionOperationsProduct: CostOperations[];
+  normalOperationsProduct: CostNormalOperations[];
+  injectionOperationsProduct: CostInjectionOperations[];
   productInformations: IProductInfo | null;
 }
 
