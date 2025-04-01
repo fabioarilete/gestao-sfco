@@ -25,8 +25,15 @@ export const InjectionOperationsSheet = () => {
   const handleDelete = (id: string) => {};
   return (
     <Box padding={2} gap={2}>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Typography fontWeight="bold" bgcolor="orange" paddingX={2} variant="h5">
+      <Box display="flex" flexDirection="row" justifyContent="space-between" marginRight={1}>
+        <Typography
+          marginLeft={1}
+          fontWeight="bold"
+          bgcolor="#e49330"
+          color="white"
+          paddingX={2}
+          variant="h5"
+        >
           Operações de Injeção
         </Typography>
         <Button variant="outlined" color="primary" disableElevation startIcon={<Icon>add</Icon>}>
@@ -42,13 +49,13 @@ export const InjectionOperationsSheet = () => {
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: 'orange' }}>
+          <TableHead sx={{ backgroundColor: '#e49330' }}>
             <TableRow>
               <TableCell align="center">Descrição da operação</TableCell>
               <TableCell align="center">Observação</TableCell>
               <TableCell align="center">Cavidades</TableCell>
               <TableCell align="center">Ciclo</TableCell>
-              <TableCell align="center">Valor Unit.</TableCell>
+              <TableCell align="center">Valor Hora</TableCell>
               <TableCell align="center">Valor Total</TableCell>
               <TableCell align="center">Ações</TableCell>
             </TableRow>
@@ -85,11 +92,11 @@ export const InjectionOperationsSheet = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box display="flex" flexDirection="row" justifyContent="end">
-        <Typography paddingX={5} bgcolor="orange" variant="h6">
+      <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
+        <Typography paddingX={5} bgcolor="#e49330" variant="h6">
           Total de Operações de Injeção
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor="orange">
+        <Box display="flex" right={0} border={1} borderColor="#e49330">
           <Typography paddingX={5} variant="h6">
             {'R$ 150,00'}
           </Typography>

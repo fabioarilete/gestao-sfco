@@ -14,17 +14,34 @@ import {
 import formatCurrency from '../../../shared/utils/formatCurrency';
 import { MdDeleteForever } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
-import { useState } from 'react';
-import { CostMaterial } from '../CostService';
+import React, { useEffect } from 'react';
+import { CostMaterial, ICost } from '../CostService';
 import { useNavigate } from 'react-router-dom';
 import { AddMaterialDialog } from './AddMaterialDialog';
+import { useFieldArray, useForm } from 'react-hook-form';
 
 export const MaterialsSheet: React.FC = () => {
-  const navigate = useNavigate();
-  const [rowsMaterial, setRowsMaterial] = useState<CostMaterial[]>([]);
-  const [open, setOpen] = useState(false);
+  const methods = useForm<ICost>({
+    defaultValues: {
+      materialsProduct: [],
+      totalMaterials: 0,
+    },
+  });
 
-  const handleDelete = (id: string) => {};
+  const navigate = useNavigate();
+  const { control, watch, setValue } = methods;
+  const {
+    fields: materials,
+    append: appendMaterial,
+    remove: removeMaterial,
+  } = useFieldArray({
+    control,
+    name: 'materialsProduct',
+  });
+
+  const materialsProduct = watch('materialsProduct');
+
+  const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -35,13 +52,33 @@ export const MaterialsSheet: React.FC = () => {
   };
 
   const handleAddMaterial = (material: CostMaterial) => {
-    setRowsMaterial(prev => [...prev, material]);
+    appendMaterial(material);
   };
+
+  const handleDelete = (index: number) => {
+    removeMaterial(index);
+  };
+
+  useEffect(() => {
+    // Calcular o total dos materiais
+    const totalMaterials =
+      materialsProduct?.reduce((sum, item) => sum + (item.totalItemMaterial || 0), 0) || 0;
+
+    // Atualizar o valor no formulário
+    setValue('totalMaterials', totalMaterials);
+  }, [materialsProduct, setValue]);
 
   return (
     <Box padding={2} gap={2}>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Typography fontWeight="bold" bgcolor="green" paddingX={2} variant="h5">
+      <Box display="flex" flexDirection="row" justifyContent="space-between" marginRight={1}>
+        <Typography
+          marginLeft={1}
+          fontWeight="bold"
+          bgcolor="#1ca22e"
+          color="white"
+          paddingX={2}
+          variant="h5"
+        >
           Materiais
         </Typography>
         <Button
@@ -64,19 +101,33 @@ export const MaterialsSheet: React.FC = () => {
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: 'green' }}>
+          <TableHead sx={{ backgroundColor: '#1ca22e' }}>
             <TableRow>
-              <TableCell align="center">Descrição do Material</TableCell>
-              <TableCell align="center">Observação</TableCell>
-              <TableCell align="center">Quant.</TableCell>
-              <TableCell align="center">Unid.</TableCell>
-              <TableCell align="center">Valor Unit.</TableCell>
-              <TableCell align="center">Valor Total</TableCell>
-              <TableCell align="center">Ações</TableCell>
+              <TableCell align="center">
+                <Typography color="white">Descrição do Material</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Observação</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Quant.</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Unid.</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Valor Unit.</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Valor Total</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Ações</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rowsMaterial.map(row => (
+            {materials.map((row, index) => (
               <TableRow key={row.id}>
                 <TableCell>{row.name.toUpperCase()}</TableCell>
                 <TableCell>{row.obs.toUpperCase()}</TableCell>
@@ -87,14 +138,14 @@ export const MaterialsSheet: React.FC = () => {
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button
-                      title="Apagar o produto"
+                      title="Apagar o material"
                       sx={{ color: 'red' }}
-                      onClick={() => handleDelete(row.id)}
+                      onClick={() => handleDelete(index)}
                     >
                       <MdDeleteForever />
                     </Button>
                     <Button
-                      title="Editar o produto"
+                      title="Editar o material"
                       sx={{ color: 'green' }}
                       onClick={() => navigate(`/products/detalhe/${row.id}`)}
                     >
@@ -107,13 +158,13 @@ export const MaterialsSheet: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box display="flex" flexDirection="row" justifyContent="end">
-        <Typography paddingX={5} bgcolor="green" variant="h6">
+      <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
+        <Typography paddingX={5} bgcolor="#1ca22e" variant="h6" color="white">
           Total de Materiais
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor="green">
+        <Box display="flex" right={0} border={1} borderColor="#1ca22e">
           <Typography paddingX={5} variant="h6">
-            {'R$ 150,00'}
+            {formatCurrency(watch('totalMaterials'), 'BRL')}
           </Typography>
         </Box>
       </Box>

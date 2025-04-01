@@ -5,8 +5,9 @@ export interface IOperation {
   id: string;
   name: string;
   valor: number;
-  unit: string;
-  tipo: string;
+  qt?: number;
+  ciclo?: number;
+  cav?: number;
 }
 
 export type IOperationsList = IOperation;

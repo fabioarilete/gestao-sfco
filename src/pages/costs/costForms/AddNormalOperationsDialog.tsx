@@ -13,24 +13,29 @@ import {
   Box,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
-import { CostMaterial } from '../CostService'; // Ajuste o caminho conforme necessário
+import { CostOperations } from '../CostService'; // Ajuste o caminho conforme necessário
 import { SelectOptions } from '../../../shared/components';
 
-interface AddMaterialDialogProps {
+interface AddNormalOperationsDialogProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (material: CostMaterial) => void;
+  onAdd: (operation: CostOperations) => void;
 }
 
 interface FormData {
   name: string;
   obs: string;
-  qt: number;
-  unit: string;
-  price: number;
+  qt?: number;
+  cav?: number;
+  ciclo?: number;
+  valor: number;
 }
 
-export const AddMaterialDialog: React.FC<AddMaterialDialogProps> = ({ open, onClose, onAdd }) => {
+export const AddNormalOperationsDialog: React.FC<AddNormalOperationsDialogProps> = ({
+  open,
+  onClose,
+  onAdd,
+}) => {
   const {
     control,
     handleSubmit,
@@ -42,38 +47,31 @@ export const AddMaterialDialog: React.FC<AddMaterialDialogProps> = ({ open, onCl
       name: '',
       obs: '',
       qt: '' as any,
-      unit: '',
-      price: '' as any,
+      valor: '' as any,
     },
     mode: 'onChange', // Validação em tempo real
   });
 
-  const [materialCache, setMaterialCache] = useState<Map<string, { unit: string; price: number }>>(
-    new Map(),
-  );
+  const [operationCache, setOperationCache] = useState<Map<string, { valor: number }>>(new Map());
   const [isLoading, setIsLoading] = useState(false);
 
   const Grid = MuiGrid as React.FC<GridProps>;
 
-  const fetchMaterialData = async (materialName: string) => {
-    if (materialCache.has(materialName)) {
-      const cachedData = materialCache.get(materialName)!;
-      setValue('unit', cachedData.unit);
-      setValue('price', cachedData.price);
+  const fetchOperationData = async (operationName: string) => {
+    if (operationCache.has(operationName)) {
+      const cachedData = operationCache.get(operationName)!;
+      setValue('valor', cachedData.valor);
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/materials?name=${materialName}`);
+      const response = await fetch(`http://localhost:5000/operations?name=${operationName}`);
       const data = await response.json();
       if (data && data.length > 0) {
-        const material = data[0];
-        setValue('unit', material.unit);
-        setValue('price', material.price);
-        setMaterialCache(prev =>
-          new Map(prev).set(materialName, { unit: material.unit, price: material.price }),
-        );
+        const operation = data[0];
+        setValue('valor', operation.valor);
+        setOperationCache(prev => new Map(prev).set(operationName, { valor: operation.valor }));
       }
     } catch (error) {
       console.error('Erro ao buscar dados do material:', error);
@@ -83,23 +81,24 @@ export const AddMaterialDialog: React.FC<AddMaterialDialogProps> = ({ open, onCl
   };
 
   const onSubmit = (data: FormData) => {
-    const newMaterial: CostMaterial = {
+    const newOperation: CostOperations = {
       id: Date.now().toString(),
       name: data.name,
       obs: data.obs,
-      qt: data.qt,
-      unit: data.unit,
-      price: data.price,
-      totalItemMaterial: data.qt * data.price,
+      qt: Number(data.qt),
+      valor: data.valor,
+      cav: Number(data.cav),
+      ciclo: Number(data.ciclo),
+      totalItemOperation: data.valor / Number(data.qt),
     };
-    onAdd(newMaterial);
+    onAdd(newOperation);
     reset();
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Adicionar Novo Material</DialogTitle>
+      <DialogTitle>Adicionar Nova operação</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Grid container spacing={2} display="flex" flexDirection="column">
@@ -107,13 +106,13 @@ export const AddMaterialDialog: React.FC<AddMaterialDialogProps> = ({ open, onCl
               <SelectOptions<FormData>
                 control={control}
                 name="name"
-                label="Materiais"
-                endpoint="materials"
-                rules={{ required: 'Material é obrigatório' }}
+                label="Operações"
+                endpoint="operations"
+                rules={{ required: 'Operação é obrigatória' }}
                 onChange={(e: SelectChangeEvent<string | number>) => {
-                  const materialName = e.target.value as string;
-                  if (materialName) {
-                    fetchMaterialData(materialName);
+                  const operationName = e.target.value as string;
+                  if (operationName) {
+                    fetchOperationData(operationName);
                   }
                 }}
               />
@@ -154,30 +153,10 @@ export const AddMaterialDialog: React.FC<AddMaterialDialogProps> = ({ open, onCl
                 )}
               />
             </Grid>
+
             <Grid>
               <Controller
-                name="unit"
-                control={control}
-                rules={{ required: 'Unidade é obrigatória' }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Unidade"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: true,
-                      endAdornment: isLoading ? <CircularProgress size={20} /> : null,
-                    }}
-                    error={!!errors.unit}
-                    helperText={errors.unit?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid>
-              <Controller
-                name="price"
+                name="valor"
                 control={control}
                 rules={{
                   required: 'Valor é obrigatório',
@@ -186,16 +165,16 @@ export const AddMaterialDialog: React.FC<AddMaterialDialogProps> = ({ open, onCl
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Valor Unitário"
                     type="number"
                     fullWidth
                     variant="outlined"
+                    label="Valor/Hora"
                     InputProps={{
                       readOnly: true,
                       endAdornment: isLoading ? <CircularProgress size={20} /> : null,
                     }}
-                    error={!!errors.price}
-                    helperText={errors.price?.message}
+                    error={!!errors.valor}
+                    helperText={errors.valor?.message}
                   />
                 )}
               />
