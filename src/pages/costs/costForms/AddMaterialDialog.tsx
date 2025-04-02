@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { CostMaterial } from '../CostService';
-import { SelectOptions } from '../../../shared/components';
+import { Input, SelectOptions } from '../../../shared/components';
 
 interface AddMaterialDialogProps {
   open: boolean;

@@ -37,12 +37,15 @@ export interface ICost {
   totalMaterials: number;
   totalNormalOperations: number;
   totalInjectionOperations: number;
+  markUpProduct: number;
   totalCost: number;
   unitCost: number;
   materialsProduct: CostMaterial[];
   normalOperationsProduct: CostNormalOperations[];
   injectionOperationsProduct: CostInjectionOperations[];
   productInformations: IProductInfo | null;
+  profit: number;
+  realProfit: number;
 }
 
 export type ICostsList = ICost;

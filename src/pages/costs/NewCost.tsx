@@ -1,9 +1,9 @@
 import { LayoutBase } from '../../shared/layouts';
 import { ToolBarButtons } from '../../shared/components';
+import { CostSheet } from './costSheets/CostSheet';
 
-import { CostSheet } from './CostSheet';
 
-export const CostsForm: React.FC = () => {
+export const NewCost: React.FC = () => {
   return (
     <LayoutBase
       titulo="Custo"

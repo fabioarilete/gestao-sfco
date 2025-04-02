@@ -30,6 +30,7 @@ export const Products: React.FC = () => {
   const [rows, setRows] = useState<IProductsList[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const busca = useMemo(() => {
     return searchParams.get('busca') || '';

@@ -16,8 +16,8 @@ import { MdDeleteForever } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import React, { useEffect } from 'react';
 import { CostMaterial, ICost } from '../CostService';
-import { AddMaterialDialog } from './AddMaterialDialog';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { AddMaterialDialog } from '../costForms/AddMaterialDialog';
 
 export const MaterialsSheet: React.FC = () => {
   const methods = useForm<ICost>({

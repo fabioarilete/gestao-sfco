@@ -16,14 +16,14 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDeleteForever } from 'react-icons/md';
 import formatCurrency from '../../../shared/utils/formatCurrency';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { CostInjectionOperations, ICost } from '../CostService';
-import { AddInjectionOperationsDialog } from './AddInjectionOperationsDialog';
+import { CostNormalOperations, ICost } from '../CostService';
+import { AddNormalOperationsDialog } from '../costForms/AddNormalOperationsDialog';
 
-export const InjectionOperationsSheet: React.FC = () => {
+export const NormalOperationsSheet: React.FC = () => {
   const methods = useForm<ICost>({
     defaultValues: {
-      injectionOperationsProduct: [],
-      totalInjectionOperations: 0,
+      normalOperationsProduct: [],
+      totalNormalOperations: 0,
     },
   });
 
@@ -35,12 +35,12 @@ export const InjectionOperationsSheet: React.FC = () => {
     update: updateOperation,
   } = useFieldArray({
     control,
-    name: 'injectionOperationsProduct',
+    name: 'normalOperationsProduct',
   });
 
-  const injectionOperations = watch('injectionOperationsProduct');
+  const normalOperations = watch('normalOperationsProduct');
   const [operationToEdit, setOperationToEdit] = React.useState<{
-    operation: CostInjectionOperations;
+    operation: CostNormalOperations;
     index: number;
   } | null>(null);
   const [open, setOpen] = React.useState(false);
@@ -55,7 +55,7 @@ export const InjectionOperationsSheet: React.FC = () => {
     setOperationToEdit(null);
   };
 
-  const handleAddInjectionOperation = (operation: CostInjectionOperations) => {
+  const handleAddNormalOperation = (operation: CostNormalOperations) => {
     if (operationToEdit) {
       updateOperation(operationToEdit.index, operation);
     } else {
@@ -69,18 +69,18 @@ export const InjectionOperationsSheet: React.FC = () => {
     }
   };
 
-  const handleEdit = (operation: CostInjectionOperations, index: number) => {
+  const handleEdit = (operation: CostNormalOperations, index: number) => {
     setOperationToEdit({ operation, index });
     setOpen(true);
   };
 
   useEffect(() => {
-    const totalInjectionOperations = injectionOperations.reduce(
-      (sum, item) => sum + (item.totalItemInjectionOperation || 0),
+    const totalNormalOperations = normalOperations.reduce(
+      (sum, item) => sum + (item.totalItemNormalOperation || 0),
       0,
     );
-    setValue('totalInjectionOperations', totalInjectionOperations);
-  }, [injectionOperations, setValue]);
+    setValue('totalNormalOperations', totalNormalOperations);
+  }, [normalOperations, setValue]);
 
   return (
     <Box padding={2} gap={2}>
@@ -88,12 +88,12 @@ export const InjectionOperationsSheet: React.FC = () => {
         <Typography
           marginLeft={1}
           fontWeight="bold"
-          bgcolor="#ef6318"
+          bgcolor="#5e5ee1"
           color="white"
           paddingX={2}
           variant="h5"
         >
-          Operações de Injeção
+          Operações Normais
         </Typography>
         <Button
           onClick={handleOpen}
@@ -111,16 +111,16 @@ export const InjectionOperationsSheet: React.FC = () => {
             Adicionar Operação
           </Typography>
         </Button>
-        <AddInjectionOperationsDialog
+        <AddNormalOperationsDialog
           operationToEdit={operationToEdit}
           open={open}
           onClose={handleClose}
-          onAdd={handleAddInjectionOperation}
+          onAdd={handleAddNormalOperation}
         />
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: '#ef6318' }}>
+          <TableHead sx={{ backgroundColor: '#5e5ee1' }}>
             <TableRow>
               <TableCell align="center">
                 <Typography color="white">Descrição da Operação</Typography>
@@ -129,10 +129,7 @@ export const InjectionOperationsSheet: React.FC = () => {
                 <Typography color="white">Observação</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Cav.</Typography>
-              </TableCell>
-              <TableCell align="center">
-                <Typography color="white">Ciclo</Typography>
+                <Typography color="white">Quant/HR</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Valor/Hora</Typography>
@@ -150,10 +147,9 @@ export const InjectionOperationsSheet: React.FC = () => {
               <TableRow key={row.id}>
                 <TableCell>{row.name.toUpperCase()}</TableCell>
                 <TableCell>{row.obs.toUpperCase()}</TableCell>
-                <TableCell>{row.cav}</TableCell>
-                <TableCell>{row.ciclo}</TableCell>
+                <TableCell>{row.qt}</TableCell>
                 <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
-                <TableCell>{formatCurrency(row.totalItemInjectionOperation, 'BRL')}</TableCell>
+                <TableCell>{formatCurrency(row.totalItemNormalOperation, 'BRL')}</TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button
@@ -180,12 +176,12 @@ export const InjectionOperationsSheet: React.FC = () => {
         </Table>
       </TableContainer>
       <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
-        <Typography paddingX={5} bgcolor="#ef6318" variant="h6" color="white">
-          Total de Operações de Injeção
+        <Typography paddingX={5} bgcolor="#5e5ee1" variant="h6" color="white">
+          Total de Operações
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor="#ef6318">
+        <Box display="flex" right={0} border={1} borderColor="#5e5ee1">
           <Typography paddingX={5} variant="h6">
-            {}
+            {formatCurrency(watch('totalNormalOperations'), 'BRL')}
           </Typography>
         </Box>
       </Box>

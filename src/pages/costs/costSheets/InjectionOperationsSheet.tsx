@@ -15,15 +15,15 @@ import React, { useEffect } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { MdDeleteForever } from 'react-icons/md';
 import formatCurrency from '../../../shared/utils/formatCurrency';
-import { AddNormalOperationsDialog } from './AddNormalOperationsDialog';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { CostNormalOperations, ICost } from '../CostService';
+import { CostInjectionOperations, ICost } from '../CostService';
+import { AddInjectionOperationsDialog } from '../costForms/AddInjectionOperationsDialog';
 
-export const NormalOperationsSheet: React.FC = () => {
+export const InjectionOperationsSheet: React.FC = () => {
   const methods = useForm<ICost>({
     defaultValues: {
-      normalOperationsProduct: [],
-      totalNormalOperations: 0,
+      injectionOperationsProduct: [],
+      totalInjectionOperations: 0,
     },
   });
 
@@ -35,12 +35,12 @@ export const NormalOperationsSheet: React.FC = () => {
     update: updateOperation,
   } = useFieldArray({
     control,
-    name: 'normalOperationsProduct',
+    name: 'injectionOperationsProduct',
   });
 
-  const normalOperations = watch('normalOperationsProduct');
+  const injectionOperations = watch('injectionOperationsProduct');
   const [operationToEdit, setOperationToEdit] = React.useState<{
-    operation: CostNormalOperations;
+    operation: CostInjectionOperations;
     index: number;
   } | null>(null);
   const [open, setOpen] = React.useState(false);
@@ -55,7 +55,7 @@ export const NormalOperationsSheet: React.FC = () => {
     setOperationToEdit(null);
   };
 
-  const handleAddNormalOperation = (operation: CostNormalOperations) => {
+  const handleAddInjectionOperation = (operation: CostInjectionOperations) => {
     if (operationToEdit) {
       updateOperation(operationToEdit.index, operation);
     } else {
@@ -69,18 +69,18 @@ export const NormalOperationsSheet: React.FC = () => {
     }
   };
 
-  const handleEdit = (operation: CostNormalOperations, index: number) => {
+  const handleEdit = (operation: CostInjectionOperations, index: number) => {
     setOperationToEdit({ operation, index });
     setOpen(true);
   };
 
   useEffect(() => {
-    const totalNormalOperations = normalOperations.reduce(
-      (sum, item) => sum + (item.totalItemNormalOperation || 0),
+    const totalInjectionOperations = injectionOperations.reduce(
+      (sum, item) => sum + (item.totalItemInjectionOperation || 0),
       0,
     );
-    setValue('totalNormalOperations', totalNormalOperations);
-  }, [normalOperations, setValue]);
+    setValue('totalInjectionOperations', totalInjectionOperations);
+  }, [injectionOperations, setValue]);
 
   return (
     <Box padding={2} gap={2}>
@@ -88,12 +88,12 @@ export const NormalOperationsSheet: React.FC = () => {
         <Typography
           marginLeft={1}
           fontWeight="bold"
-          bgcolor="#5e5ee1"
+          bgcolor="#ef6318"
           color="white"
           paddingX={2}
           variant="h5"
         >
-          Operações Normais
+          Operações de Injeção
         </Typography>
         <Button
           onClick={handleOpen}
@@ -111,16 +111,16 @@ export const NormalOperationsSheet: React.FC = () => {
             Adicionar Operação
           </Typography>
         </Button>
-        <AddNormalOperationsDialog
+        <AddInjectionOperationsDialog
           operationToEdit={operationToEdit}
           open={open}
           onClose={handleClose}
-          onAdd={handleAddNormalOperation}
+          onAdd={handleAddInjectionOperation}
         />
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: '#5e5ee1' }}>
+          <TableHead sx={{ backgroundColor: '#ef6318' }}>
             <TableRow>
               <TableCell align="center">
                 <Typography color="white">Descrição da Operação</Typography>
@@ -129,7 +129,10 @@ export const NormalOperationsSheet: React.FC = () => {
                 <Typography color="white">Observação</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Quant/HR</Typography>
+                <Typography color="white">Cav.</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography color="white">Ciclo</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Valor/Hora</Typography>
@@ -147,9 +150,10 @@ export const NormalOperationsSheet: React.FC = () => {
               <TableRow key={row.id}>
                 <TableCell>{row.name.toUpperCase()}</TableCell>
                 <TableCell>{row.obs.toUpperCase()}</TableCell>
-                <TableCell>{row.qt}</TableCell>
+                <TableCell>{row.cav}</TableCell>
+                <TableCell>{row.ciclo}</TableCell>
                 <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
-                <TableCell>{formatCurrency(row.totalItemNormalOperation, 'BRL')}</TableCell>
+                <TableCell>{formatCurrency(row.totalItemInjectionOperation, 'BRL')}</TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button
@@ -176,12 +180,12 @@ export const NormalOperationsSheet: React.FC = () => {
         </Table>
       </TableContainer>
       <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
-        <Typography paddingX={5} bgcolor="#5e5ee1" variant="h6" color="white">
-          Total de Operações
+        <Typography paddingX={5} bgcolor="#ef6318" variant="h6" color="white">
+          Total de Operações de Injeção
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor="#5e5ee1">
+        <Box display="flex" right={0} border={1} borderColor="#ef6318">
           <Typography paddingX={5} variant="h6">
-            {formatCurrency(watch('totalNormalOperations'), 'BRL')}
+            {}
           </Typography>
         </Box>
       </Box>
