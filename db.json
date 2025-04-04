@@ -149,6 +149,12 @@
       "price": 5,
       "unit": "UN",
       "id": "_-i1vf6"
+    },
+    {
+      "name": "BATATA",
+      "price": 10,
+      "unit": "KG",
+      "id": "6K-CTX3"
     }
   ],
   "operations": [
@@ -186,6 +192,13 @@
       "unit": "HR",
       "type": "Normal",
       "id": "JqgET1g"
+    },
+    {
+      "name": "PREGAR",
+      "valor": 70,
+      "unit": "HR",
+      "type": "Normal",
+      "id": "OozK9r_"
     }
   ]
 }

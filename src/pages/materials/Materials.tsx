@@ -20,7 +20,6 @@ import { IMaterialsList, MaterialsService } from './MaterialsService';
 import { LayoutBase } from '../../shared/layouts';
 import { ToolBarSearch } from '../../shared/components';
 import formatCurrency from '../../shared/utils/formatCurrency';
-import { indigo } from '@mui/material/colors';
 
 export const Materials: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,6 +44,7 @@ export const Materials: React.FC = () => {
     debounce(() => {
       MaterialsService.getAll(pagina, busca).then(res => {
         setIsLoading(false);
+        console.log(res);
 
         if (res instanceof Error) {
           alert(res.message);

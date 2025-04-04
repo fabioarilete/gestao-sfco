@@ -50,7 +50,7 @@ export const NormalOperationsForm = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('teste');
+    console.log(selectedOperation);
 
     if (!selectedOperationId) {
       alert('Por favor, selecione uma operação.');
