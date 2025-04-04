@@ -1,17 +1,31 @@
 import { Environment } from '../../shared/environments';
 import { Api } from '../../shared/services/api/axios-config';
 
-export interface IOperation {
+export interface INormalOperation {
   id: string;
   name: string;
   valor: number;
-  qt?: number;
-  ciclo?: number;
-  cav?: number;
+  qt: number;
 }
 
-export type IOperationsList = IOperation;
-export type IOperationDetail = IOperation;
+export interface AllOperations {
+  id: string;
+  name: string;
+  valor: number;
+  unit: string;
+  type: string;
+}
+
+export interface IInjectionOperation {
+  id: string;
+  name: string;
+  valor: number;
+  ciclo: number;
+  cav: number;
+}
+
+export type IOperationsList = AllOperations;
+export type IOperationDetail = AllOperations;
 
 type TTotalCountOperations = {
   data: IOperationsList[];
@@ -25,13 +39,6 @@ const getAll = async (page = 1, filter = ''): Promise<TTotalCountOperations | Er
     const { data, headers } = await Api.get(urlRelativa);
 
     if (data) {
-      // Verificação adicional para o cabeçalho x-total-count
-      // if (headers['x-total-count']) {
-      //   console.log('Total Count do cabeçalho:', headers['x-total-count']);
-      // } else {
-      //   console.error('Cabeçalho x-total-count não encontrado.');
-      // }
-
       return {
         data,
         totalCount: headers['x-total-count']

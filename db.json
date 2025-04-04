@@ -143,6 +143,12 @@
       "name": "PP CORES",
       "price": 6.5,
       "unit": "kG"
+    },
+    {
+      "name": "BACIA PLÁSTICA 12 L ",
+      "price": 5,
+      "unit": "UN",
+      "id": "_-i1vf6"
     }
   ],
   "operations": [
@@ -150,29 +156,36 @@
       "name": "MONTAGEM",
       "valor": 50,
       "unit": "HR",
-      "tipo": "Normal",
-      "id": 1
+      "type": "Normal",
+      "id": "1"
     },
     {
       "name": "INJETORA",
       "valor": 120,
       "unit": "HR",
-      "tipo": "Injeção",
-      "id": 2
+      "type": "Injeção",
+      "id": "2"
     },
     {
       "name": "TUFAGEM",
       "valor": 100,
       "unit": "HR",
-      "tipo": "Normal",
-      "id": 3
+      "type": "Normal",
+      "id": "3"
     },
     {
       "name": "EMBALAGEM",
       "valor": 50,
       "unit": "HR",
-      "tipo": "Normal",
-      "id": 4
+      "type": "Normal",
+      "id": "4"
+    },
+    {
+      "name": "MONTAGEM",
+      "valor": 50,
+      "unit": "HR",
+      "type": "Normal",
+      "id": "JqgET1g"
     }
   ]
 }

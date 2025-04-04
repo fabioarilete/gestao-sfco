@@ -21,7 +21,7 @@ interface IOperationForm {
   name: string;
   valor: number;
   unit: string;
-  tipo: string;
+  type: string;
 }
 
 export const OperationsForm: React.FC = () => {
@@ -41,7 +41,7 @@ export const OperationsForm: React.FC = () => {
       name: '',
       valor: '' as any,
       unit: '',
-      tipo: '',
+      type: '',
     },
   });
 
@@ -58,7 +58,7 @@ export const OperationsForm: React.FC = () => {
           setValue('name', res.name);
           setValue('valor', res.valor);
           setValue('unit', res.unit);
-          setValue('tipo', res.tipo);
+          setValue('type', res.type);
           setName(res.name);
         }
       });
@@ -217,7 +217,7 @@ export const OperationsForm: React.FC = () => {
                 <InputLabel>Tipo</InputLabel>
 
                 <Controller
-                  name="tipo"
+                  name="type"
                   control={control}
                   rules={{ required: 'Tipo é obrigatório' }}
                   render={({ field }) => (

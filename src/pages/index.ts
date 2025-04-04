@@ -10,8 +10,6 @@ export * from './operations/OperationsForm';
 
 export * from './products/Products';
 export * from './products/ProductsService';
-export * from './products/ProductsForm';
-export * from './products/ProductsInfo';
 
 export * from './costs/CostService';
 export * from './costs/InitialCostState';
@@ -24,8 +22,7 @@ export * from './costs/costSheets/MaterialsSheet';
 export * from './costs/costSheets/NormalOperationsSheet';
 export * from './costs/costSheets/InjectionOperationsSheet';
 
-export * from './costs/costForms/AddHeaderDialog';
-export * from './costs/costForms/AddMaterialDialog';
-export * from './costs/costForms/AddNormalOperationsDialog';
-export * from './costs/costForms/AddInjectionOperationsDialog';
-
+export * from './costs/costForms/HeaderForm';
+export * from './costs/costForms/MaterialCostForm';
+export * from './costs/costForms/NormalOperationsForm';
+export * from './costs/costForms/InjectionOperationsForm';

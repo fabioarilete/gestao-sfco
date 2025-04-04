@@ -3,19 +3,46 @@ import logo from '../../../shared/img/logosf.png';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { ICost } from '../CostService';
 import ItemInformationCost from './costComponents/ItemInformationCost';
-import { AddHeaderDialog } from '../costForms/AddHeaderDialog';
+import { HeaderForm } from '../costForms/HeaderForm';
+import Modal from '../../../shared/components/modal/Modal';
 
-interface IProductForm {
+interface Props {
   cost: ICost;
   setCost: Dispatch<SetStateAction<ICost>>;
 }
 
-export const HeaderSheet = ({ cost, setCost }: IProductForm) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(true);
+export const HeaderSheet = ({ cost, setCost }: Props) => {
+  const [modalOpen, setModalOpen] = useState(true);
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  function handleSubmit() {
+    setModalOpen(false);
+  }
+
   return (
     <Box padding={2}>
-      {isDialogOpen && (
-        <AddHeaderDialog cost={cost} setCost={setCost} onClose={() => setIsDialogOpen(false)} />
+      {modalOpen && (
+        <Modal
+          id="header-form"
+          open={modalOpen}
+          onClose={handleCloseModal}
+          onSubmit={handleSubmit}
+          title="Crie seu produto"
+          buttonText="Criar"
+        >
+          <HeaderForm
+            cost={cost}
+            setCost={setCost}
+            onCloseModal={handleCloseModal} // Passa a função para fechar o modal
+          />
+        </Modal>
       )}
       <Grid container direction="column" padding={1} spacing="2px">
         <Grid container direction="row">
@@ -26,7 +53,7 @@ export const HeaderSheet = ({ cost, setCost }: IProductForm) => {
             justifyContent="center"
             alignItems="center"
           >
-            <img onClick={() => setIsDialogOpen(true)} style={{ width: '200px' }} src={logo} />
+            <img onClick={() => setModalOpen(true)} style={{ width: '200px' }} src={logo} />
             <Typography variant="h6">Planilha de Custo</Typography>
           </Grid>
 
@@ -46,10 +73,6 @@ export const HeaderSheet = ({ cost, setCost }: IProductForm) => {
             justifyContent="center"
             alignItems="center"
           >
-            <Grid margin={0} size={12} display="flex" justifyContent="end" alignItems="center">
-              <Typography>Data: </Typography>
-              <span>30/01/2025</span>
-            </Grid>
             <Grid
               container
               margin={0}
@@ -59,7 +82,11 @@ export const HeaderSheet = ({ cost, setCost }: IProductForm) => {
               justifyContent="end"
               alignItems="center"
             >
-              <ItemInformationCost title="Tipo de Produto:" content={cost.type} />
+              <ItemInformationCost title="Data:" content={`02/04/2025`} />
+              <ItemInformationCost
+                title="Tipo de Produto:"
+                content={cost.type === 'SIM' ? 'Produzido' : 'Revenda'}
+              />
               <ItemInformationCost title="Subst. Tributária:" content={cost.st} />
               <ItemInformationCost title="Sfco x STza:" content={cost.sf_st} />
             </Grid>
@@ -67,29 +94,70 @@ export const HeaderSheet = ({ cost, setCost }: IProductForm) => {
         </Grid>
         <Grid container display="flex" flexDirection="row" mt={2}>
           <Grid size={2} display="flex" flexDirection="column">
-            <Typography variant="caption">Código:</Typography>
-            <Box width="90%" border={1} borderRadius="5px" paddingY={1} textAlign="center" bgcolor= '#f0eca7'>
+            <Typography variant="caption" fontWeight="bold">
+              Código:
+            </Typography>
+            <Box
+              width="90%"
+              borderRadius="5px"
+              paddingY={1}
+              textAlign="center"
+              bgcolor="#f0eca7"
+              color="blue"
+              fontWeight="bold"
+            >
               {cost.cod}
             </Box>
           </Grid>
 
           <Grid size={6} display="flex" flexDirection="column">
-            <Typography variant="caption">Descrição do Produto:</Typography>
-            <Box width="95%" border={1} borderRadius="5px" pl="5px" paddingY={1} textAlign="left">
+            <Typography variant="caption" fontWeight="bold">
+              Descrição do Produto:
+            </Typography>
+            <Box
+              width="95%"
+              borderRadius="5px"
+              pl="5px"
+              paddingY={1}
+              textAlign="left"
+              bgcolor="#f0eca7"
+              color="blue"
+              fontWeight="bold"
+            >
               {cost.name}
             </Box>
           </Grid>
 
           <Grid size={2} display="flex" flexDirection="column">
-            <Typography variant="caption">Unidade:</Typography>
-            <Box width="90%" border={1} borderRadius="5px" paddingY={1} textAlign="center">
+            <Typography variant="caption" fontWeight="bold">
+              Unidade:
+            </Typography>
+            <Box
+              width="90%"
+              borderRadius="5px"
+              paddingY={1}
+              textAlign="center"
+              bgcolor="#f0eca7"
+              color="blue"
+              fontWeight="bold"
+            >
               {cost.unit}
             </Box>
           </Grid>
 
           <Grid size={2} display="flex" flexDirection="column">
-            <Typography variant="caption">Quantidade:</Typography>
-            <Box width="90%" border={1} borderRadius="5px" paddingY={1} textAlign="center">
+            <Typography variant="caption" fontWeight="bold">
+              Quantidade:
+            </Typography>
+            <Box
+              width="90%"
+              borderRadius="5px"
+              paddingY={1}
+              textAlign="center"
+              bgcolor="#f0eca7"
+              color="blue"
+              fontWeight="bold"
+            >
               {cost.qt}
             </Box>
           </Grid>

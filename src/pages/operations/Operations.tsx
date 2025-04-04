@@ -103,7 +103,7 @@ export const Operations: React.FC = () => {
                   {formatCurrency(row.valor, 'BRL')}
                 </TableCell>
                 <TableCell align="center">{row.unit}</TableCell>
-                <TableCell align="center">{row.tipo}</TableCell>
+                <TableCell align="center">{row.type}</TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button sx={{ color: 'red' }} onClick={() => handleDelete(row.id)}>

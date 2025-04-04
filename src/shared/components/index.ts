@@ -5,3 +5,4 @@ export * from './selectOptions/SelectOptions';
 export * from './input/Input';
 export * from './select/SelectUnit';
 export * from './select/SelectYesOrNot';
+export * from './modal/Modal';

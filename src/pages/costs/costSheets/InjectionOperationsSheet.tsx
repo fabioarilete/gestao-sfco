@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Icon,
   Paper,
   Table,
   TableBody,
@@ -11,134 +10,117 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
-import { FaEdit } from 'react-icons/fa';
-import { MdDeleteForever } from 'react-icons/md';
 import formatCurrency from '../../../shared/utils/formatCurrency';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { MdDeleteForever } from 'react-icons/md';
+import { FaEdit } from 'react-icons/fa';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { CostInjectionOperations, ICost } from '../CostService';
-import { AddInjectionOperationsDialog } from '../costForms/AddInjectionOperationsDialog';
+import Modal from '../../../shared/components/modal/Modal';
+import { InjectionOperationsForm } from '../costForms/InjectionOperationsForm';
 
-export const InjectionOperationsSheet: React.FC = () => {
-  const methods = useForm<ICost>({
-    defaultValues: {
-      injectionOperationsProduct: [],
-      totalInjectionOperations: 0,
-    },
-  });
+interface Props {
+  cost: ICost;
+  removeOperation(operationId: string): void;
+  setCost: Dispatch<SetStateAction<ICost>>;
+  operation?: CostInjectionOperations | undefined; // Adicionando undefined à tipagem
+}
 
-  const { control, watch, setValue } = methods;
-  const {
-    fields: operations,
-    append: appendOperation,
-    remove: removeOperation,
-    update: updateOperation,
-  } = useFieldArray({
-    control,
-    name: 'injectionOperationsProduct',
-  });
+export const InjectionOperationsSheet = ({ cost, removeOperation, setCost, operation }: Props) => {
+  const [operationToEdit, setOperationToEdit] = useState<CostInjectionOperations | undefined>(
+    undefined,
+  );
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const injectionOperations = watch('injectionOperationsProduct');
-  const [operationToEdit, setOperationToEdit] = React.useState<{
-    operation: CostInjectionOperations;
-    index: number;
-  } | null>(null);
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOperationToEdit(null);
-    setOpen(true);
+  const handleOpenModal = () => {
+    setModalOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setOperationToEdit(null);
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setOperationToEdit(undefined); // Limpa a operação após o fechamento do modal
   };
 
-  const handleAddInjectionOperation = (operation: CostInjectionOperations) => {
-    if (operationToEdit) {
-      updateOperation(operationToEdit.index, operation);
-    } else {
-      appendOperation(operation);
-    }
+  const handleSubmit = () => {
+    // Lógica para salvar ou atualizar a operação, se necessário
+    setModalOpen(false); // Fecha o modal após a operação ser concluída
   };
 
-  const handleDelete = (index: number) => {
-    if (window.confirm('Tem certeza que deseja remover esta operação?')) {
-      removeOperation(index);
-    }
-  };
-
-  const handleEdit = (operation: CostInjectionOperations, index: number) => {
-    setOperationToEdit({ operation, index });
-    setOpen(true);
-  };
-
-  useEffect(() => {
-    const totalInjectionOperations = injectionOperations.reduce(
-      (sum, item) => sum + (item.totalItemInjectionOperation || 0),
-      0,
-    );
-    setValue('totalInjectionOperations', totalInjectionOperations);
-  }, [injectionOperations, setValue]);
+  const totalInjectionOperations = cost.injectionOperationsProduct.reduce(
+    (sum, m) => sum + m.totalItemInjectionOperation,
+    0,
+  );
 
   return (
     <Box padding={2} gap={2}>
-      <Box display="flex" flexDirection="row" justifyContent="space-between" marginRight={1}>
+      <Box display="flex" flexDirection="row" gap={2}>
         <Typography
           marginLeft={1}
           fontWeight="bold"
-          bgcolor="#ef6318"
+          bgcolor="#3c4fde"
           color="white"
           paddingX={2}
           variant="h5"
         >
           Operações de Injeção
         </Typography>
-        <Button
-          onClick={handleOpen}
-          variant="outlined"
-          color="primary"
-          disableElevation
-          startIcon={<Icon>add</Icon>}
+        <Box
+          sx={{ cursor: 'pointer' }}
+          width="35px"
+          bgcolor="#0d5717"
+          borderRadius="50%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          onClick={() => {
+            setOperationToEdit(undefined); // Limpa a operação ao adicionar uma nova
+            handleOpenModal();
+          }}
         >
-          <Typography
-            variant="button"
-            whiteSpace="nowrap"
-            textOverflow="ellipsis"
-            overflow="hidden"
-          >
-            Adicionar Operação
+          <Typography variant="h5" color="white">
+            +
           </Typography>
-        </Button>
-        <AddInjectionOperationsDialog
-          operationToEdit={operationToEdit}
-          open={open}
-          onClose={handleClose}
-          onAdd={handleAddInjectionOperation}
-        />
+        </Box>
+
+        {modalOpen && (
+          <Modal
+            id="injectionOperation-form"
+            open={modalOpen}
+            onClose={handleCloseModal}
+            onSubmit={handleSubmit} // Será chamado junto com o submit do formulário
+            title={operationToEdit ? 'Editar operação' : 'Adicione operação ao produto'}
+            buttonText={operationToEdit ? 'Salvar' : 'Adicionar'}
+          >
+            <InjectionOperationsForm
+              cost={cost}
+              setCost={setCost}
+              removeOperation={removeOperation}
+              operation={operationToEdit} // Passa a operação a ser editada
+              onCloseModal={handleCloseModal} // Passa a função para fechar o modal
+            />
+          </Modal>
+        )}
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: '#ef6318' }}>
+          <TableHead sx={{ backgroundColor: "#3c4fde" }}>
             <TableRow>
               <TableCell align="center">
-                <Typography color="white">Descrição da Operação</Typography>
+                <Typography color="white">Descrição da operação</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Observação</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Cav.</Typography>
+                <Typography color="white">Cavidades</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Ciclo</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Valor/Hora</Typography>
+                <Typography color="white">Valor Hora</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Custo por Item</Typography>
+                <Typography color="white">Valor Total</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Ações</Typography>
@@ -146,20 +128,22 @@ export const InjectionOperationsSheet: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {operations.map((row, index) => (
+            {cost.injectionOperationsProduct.map(row => (
               <TableRow key={row.id}>
                 <TableCell>{row.name.toUpperCase()}</TableCell>
-                <TableCell>{row.obs.toUpperCase()}</TableCell>
-                <TableCell>{row.cav}</TableCell>
-                <TableCell>{row.ciclo}</TableCell>
-                <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
-                <TableCell>{formatCurrency(row.totalItemInjectionOperation, 'BRL')}</TableCell>
+                <TableCell align="center">{row.obs.toUpperCase()}</TableCell>
+                <TableCell align="center">{row.cav}</TableCell>
+                <TableCell align="center">{row.ciclo}</TableCell>
+                <TableCell align="right">{formatCurrency(row.valor, 'BRL')}</TableCell>
+                <TableCell align="right">
+                  {formatCurrency(row.totalItemInjectionOperation, 'BRL')}
+                </TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button
-                      title="Apagar a operação"
+                      title="Apagar o material"
                       sx={{ color: 'red' }}
-                      onClick={() => handleDelete(index)}
+                      onClick={() => removeOperation(row.id)}
                       aria-label="Apagar operação"
                     >
                       <MdDeleteForever />
@@ -167,7 +151,10 @@ export const InjectionOperationsSheet: React.FC = () => {
                     <Button
                       title="Editar a operação"
                       sx={{ color: 'green' }}
-                      onClick={() => handleEdit(row, index)}
+                      onClick={() => {
+                        setOperationToEdit(row); // Passa a operação que será editada
+                        handleOpenModal();
+                      }}
                       aria-label="Editar operação"
                     >
                       <FaEdit />
@@ -180,12 +167,12 @@ export const InjectionOperationsSheet: React.FC = () => {
         </Table>
       </TableContainer>
       <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
-        <Typography paddingX={5} bgcolor="#ef6318" variant="h6" color="white">
+        <Typography paddingX={5} bgcolor="#3c4fde" variant="h6" color="white">
           Total de Operações de Injeção
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor="#ef6318">
+        <Box display="flex" right={0} border={1} borderColor="#3c4fde">
           <Typography paddingX={5} variant="h6">
-            {}
+            {formatCurrency(totalInjectionOperations, 'BRL')}
           </Typography>
         </Box>
       </Box>

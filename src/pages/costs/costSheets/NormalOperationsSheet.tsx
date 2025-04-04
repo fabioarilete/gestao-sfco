@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Icon,
   Paper,
   Table,
   TableBody,
@@ -11,131 +10,114 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
-import { FaEdit } from 'react-icons/fa';
-import { MdDeleteForever } from 'react-icons/md';
 import formatCurrency from '../../../shared/utils/formatCurrency';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { MdDeleteForever } from 'react-icons/md';
+import { FaEdit } from 'react-icons/fa';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { CostNormalOperations, ICost } from '../CostService';
-import { AddNormalOperationsDialog } from '../costForms/AddNormalOperationsDialog';
+import Modal from '../../../shared/components/modal/Modal';
+import { NormalOperationsForm } from '../costForms/NormalOperationsForm';
 
-export const NormalOperationsSheet: React.FC = () => {
-  const methods = useForm<ICost>({
-    defaultValues: {
-      normalOperationsProduct: [],
-      totalNormalOperations: 0,
-    },
-  });
+interface Props {
+  cost: ICost;
+  removeOperation(operationId: string): void;
+  setCost: Dispatch<SetStateAction<ICost>>;
+  operation?: CostNormalOperations | undefined; // Adicionando undefined à tipagem
+}
 
-  const { control, watch, setValue } = methods;
-  const {
-    fields: operations,
-    append: appendOperation,
-    remove: removeOperation,
-    update: updateOperation,
-  } = useFieldArray({
-    control,
-    name: 'normalOperationsProduct',
-  });
+export const NormalOperationsSheet = ({ cost, removeOperation, setCost, operation }: Props) => {
+  const [operationToEdit, setOperationToEdit] = useState<CostNormalOperations | undefined>(
+    undefined,
+  );
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const normalOperations = watch('normalOperationsProduct');
-  const [operationToEdit, setOperationToEdit] = React.useState<{
-    operation: CostNormalOperations;
-    index: number;
-  } | null>(null);
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOperationToEdit(null);
-    setOpen(true);
+  const handleOpenModal = () => {
+    setModalOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setOperationToEdit(null);
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setOperationToEdit(undefined); // Limpa a operação após o fechamento do modal
   };
 
-  const handleAddNormalOperation = (operation: CostNormalOperations) => {
-    if (operationToEdit) {
-      updateOperation(operationToEdit.index, operation);
-    } else {
-      appendOperation(operation);
-    }
+  const handleSubmit = () => {
+    // Lógica para salvar ou atualizar a operação, se necessário
+    setModalOpen(false); // Fecha o modal após a operação ser concluída
   };
 
-  const handleDelete = (index: number) => {
-    if (window.confirm('Tem certeza que deseja remover esta operação?')) {
-      removeOperation(index);
-    }
-  };
-
-  const handleEdit = (operation: CostNormalOperations, index: number) => {
-    setOperationToEdit({ operation, index });
-    setOpen(true);
-  };
-
-  useEffect(() => {
-    const totalNormalOperations = normalOperations.reduce(
-      (sum, item) => sum + (item.totalItemNormalOperation || 0),
-      0,
-    );
-    setValue('totalNormalOperations', totalNormalOperations);
-  }, [normalOperations, setValue]);
+  const totalNormalOperations = cost.normalOperationsProduct.reduce(
+    (sum, m) => sum + m.totalItemNormalOperation,
+    0,
+  );
 
   return (
     <Box padding={2} gap={2}>
-      <Box display="flex" flexDirection="row" justifyContent="space-between" marginRight={1}>
+      <Box display="flex" flexDirection="row" gap={2}>
         <Typography
           marginLeft={1}
           fontWeight="bold"
-          bgcolor="#5e5ee1"
+          bgcolor='#8f2e7c'
           color="white"
           paddingX={2}
           variant="h5"
         >
           Operações Normais
         </Typography>
-        <Button
-          onClick={handleOpen}
-          variant="outlined"
-          color="primary"
-          disableElevation
-          startIcon={<Icon>add</Icon>}
+        <Box
+          sx={{ cursor: 'pointer' }}
+          width="35px"
+          bgcolor="#0d5717"
+          borderRadius="50%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          onClick={() => {
+            setOperationToEdit(undefined); // Limpa a operação ao adicionar uma nova
+            handleOpenModal();
+          }}
         >
-          <Typography
-            variant="button"
-            whiteSpace="nowrap"
-            textOverflow="ellipsis"
-            overflow="hidden"
-          >
-            Adicionar Operação
+          <Typography variant="h5" color="white">
+            +
           </Typography>
-        </Button>
-        <AddNormalOperationsDialog
-          operationToEdit={operationToEdit}
-          open={open}
-          onClose={handleClose}
-          onAdd={handleAddNormalOperation}
-        />
+        </Box>
+
+        {modalOpen && (
+          <Modal
+            id="normalOperation-form"
+            open={modalOpen}
+            onClose={handleCloseModal}
+            onSubmit={handleSubmit} // Será chamado junto com o submit do formulário
+            title={operationToEdit ? 'Editar operação' : 'Adicione operação ao produto'}
+            buttonText={operationToEdit ? 'Salvar' : 'Adicionar'}
+          >
+            <NormalOperationsForm
+              cost={cost}
+              setCost={setCost}
+              removeOperation={removeOperation}
+              operation={operationToEdit} // Passa a operação a ser editada
+              onCloseModal={handleCloseModal} // Passa a função para fechar o modal
+            />
+          </Modal>
+        )}
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: '#5e5ee1' }}>
+          <TableHead sx={{ backgroundColor: '#8f2e7c' }}>
             <TableRow>
               <TableCell align="center">
-                <Typography color="white">Descrição da Operação</Typography>
+                <Typography color="white">Descrição da operação</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Observação</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Quant/HR</Typography>
+                <Typography color="white">Quant.</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Valor/Hora</Typography>
+                <Typography color="white">Valor Hora</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Custo por Item</Typography>
+                <Typography color="white">Valor Total</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography color="white">Ações</Typography>
@@ -143,19 +125,21 @@ export const NormalOperationsSheet: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {operations.map((row, index) => (
+            {cost.normalOperationsProduct.map(row => (
               <TableRow key={row.id}>
                 <TableCell>{row.name.toUpperCase()}</TableCell>
-                <TableCell>{row.obs.toUpperCase()}</TableCell>
-                <TableCell>{row.qt}</TableCell>
-                <TableCell>{formatCurrency(row.valor, 'BRL')}</TableCell>
-                <TableCell>{formatCurrency(row.totalItemNormalOperation, 'BRL')}</TableCell>
+                <TableCell align="center">{row.obs.toUpperCase()}</TableCell>
+                <TableCell align="center">{row.qt}</TableCell>
+                <TableCell align="right">{formatCurrency(row.valor, 'BRL')}</TableCell>
+                <TableCell align="right">
+                  {formatCurrency(row.totalItemNormalOperation, 'BRL')}
+                </TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center">
                     <Button
-                      title="Apagar a operação"
+                      title="Apagar o material"
                       sx={{ color: 'red' }}
-                      onClick={() => handleDelete(index)}
+                      onClick={() => removeOperation(row.id)}
                       aria-label="Apagar operação"
                     >
                       <MdDeleteForever />
@@ -163,7 +147,10 @@ export const NormalOperationsSheet: React.FC = () => {
                     <Button
                       title="Editar a operação"
                       sx={{ color: 'green' }}
-                      onClick={() => handleEdit(row, index)}
+                      onClick={() => {
+                        setOperationToEdit(row); // Passa a operação que será editada
+                        handleOpenModal();
+                      }}
                       aria-label="Editar operação"
                     >
                       <FaEdit />
@@ -176,12 +163,12 @@ export const NormalOperationsSheet: React.FC = () => {
         </Table>
       </TableContainer>
       <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
-        <Typography paddingX={5} bgcolor="#5e5ee1" variant="h6" color="white">
+        <Typography paddingX={5} bgcolor='#8f2e7c' variant="h6" color="white">
           Total de Operações
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor="#5e5ee1">
+        <Box display="flex" right={0} border={1} borderColor='#8f2e7c'>
           <Typography paddingX={5} variant="h6">
-            {formatCurrency(watch('totalNormalOperations'), 'BRL')}
+            {formatCurrency(totalNormalOperations, 'BRL')}
           </Typography>
         </Box>
       </Box>

@@ -1,23 +1,23 @@
 import { Environment } from '../../shared/environments';
 import { Api } from '../../shared/services/api/axios-config';
 import { IMaterial } from '../materials/MaterialsService';
-import { IOperation } from '../operations/OperationsService';
+import { IInjectionOperation, INormalOperation } from '../operations/OperationsService';
 import { IProductInfo } from '../products/ProductsInfo';
 
 export interface CostMaterial extends IMaterial {
   totalItemMaterial: number;
   obs: string;
-  qt: number;
+  qt: string;
   id: string;
 }
 
-export interface CostNormalOperations extends IOperation {
+export interface CostNormalOperations extends INormalOperation {
   totalItemNormalOperation: number;
   obs: string;
   qt: number;
   id: string;
 }
-export interface CostInjectionOperations extends IOperation {
+export interface CostInjectionOperations extends IInjectionOperation {
   totalItemInjectionOperation: number;
   obs: string;
   cav: number;
