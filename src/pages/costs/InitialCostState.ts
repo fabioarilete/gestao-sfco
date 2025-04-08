@@ -1,6 +1,6 @@
 import { ICost } from './CostService';
 
-export const initialCostState: ICost = {
+export const InitialCostState: ICost = {
   cod: '',
   name: '',
   unit: '',

@@ -5,13 +5,15 @@ import { ICost } from '../CostService';
 import ItemInformationCost from './costComponents/ItemInformationCost';
 import { HeaderForm } from '../costForms/HeaderForm';
 import Modal from '../../../shared/components/modal/Modal';
+import { IMarkUp } from '../../markUps/MarkUpsService';
 
 interface Props {
   cost: ICost;
   setCost: Dispatch<SetStateAction<ICost>>;
+  markUp: IMarkUp;
 }
 
-export const HeaderSheet = ({ cost, setCost }: Props) => {
+export const HeaderSheet = ({ cost, setCost, markUp }: Props) => {
   const [modalOpen, setModalOpen] = useState(true);
 
   const handleOpenModal = () => {
@@ -40,6 +42,7 @@ export const HeaderSheet = ({ cost, setCost }: Props) => {
           <HeaderForm
             cost={cost}
             setCost={setCost}
+            markUp={markUp}
             onCloseModal={handleCloseModal} // Passa a função para fechar o modal
           />
         </Modal>
@@ -89,6 +92,7 @@ export const HeaderSheet = ({ cost, setCost }: Props) => {
               />
               <ItemInformationCost title="Subst. Tributária:" content={cost.st} />
               <ItemInformationCost title="Sfco x STza:" content={cost.sf_st} />
+              <ItemInformationCost title="MarkUp:" content={cost.markUpProduct.name} />
             </Grid>
           </Grid>
         </Grid>

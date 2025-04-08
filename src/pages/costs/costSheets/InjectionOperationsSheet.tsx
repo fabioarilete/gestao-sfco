@@ -51,7 +51,7 @@ export const InjectionOperationsSheet = ({ cost, removeOperation, setCost, opera
   );
 
   return (
-    <Box padding={2} gap={2}>
+    <Box padding={2} gap={2} borderBottom={3}>
       <Box display="flex" flexDirection="row" gap={2}>
         <Typography
           marginLeft={1}

@@ -140,7 +140,6 @@ export const MaterialCostForm = ({
             label="Quantidade"
             name="qt"
             placeholder="Informe a quantidade"
-            min="0"
             onChange={e => setQt(e.currentTarget.value)}
           />
         </Grid>

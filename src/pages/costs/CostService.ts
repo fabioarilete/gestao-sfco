@@ -1,5 +1,6 @@
 import { Environment } from '../../shared/environments';
 import { Api } from '../../shared/services/api/axios-config';
+import { IMarkUp } from '../markUps/MarkUpsService';
 import { IMaterial } from '../materials/MaterialsService';
 import { IInjectionOperation, INormalOperation } from '../operations/OperationsService';
 import { IProductInfo } from '../products/ProductsInfo';
@@ -37,7 +38,7 @@ export interface ICost {
   totalMaterials: number;
   totalNormalOperations: number;
   totalInjectionOperations: number;
-  markUpProduct: number;
+  markUpProduct: IMarkUp;
   totalCost: number;
   unitCost: number;
   materialsProduct: CostMaterial[];

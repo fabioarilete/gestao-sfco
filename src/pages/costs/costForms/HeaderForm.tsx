@@ -1,22 +1,80 @@
-import React, { SetStateAction, Dispatch } from 'react';
-import { Box, Grid } from '@mui/material';
+import React, { SetStateAction, Dispatch, useState, useEffect, useMemo } from 'react';
+import { Box, Grid, Typography } from '@mui/material';
 import { ICost } from '../CostService';
-import { Input, SelectUnit, SelectYesOrNot } from '../../../shared/components';
+import { Input, SelectOptions, SelectUnit, SelectYesOrNot } from '../../../shared/components';
+import { IMarkUp } from '../../markUps/MarkUpsService';
+import { Api } from '../../../shared/services/api/axios-config';
 
 interface Props {
   cost: ICost;
   setCost: Dispatch<SetStateAction<ICost>>;
-  onCloseModal: () => void; // Função para fechar o modal
+  onCloseModal: () => void;
+  markUp?: IMarkUp;
 }
 
-export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal }) => {
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markUp }) => {
+  const [markUps, setMarkUps] = useState<IMarkUp[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedMarkUpId, setSelectMarkUpId] = useState<string | undefined>(markUp?.id);
+
+  useEffect(() => {
+    setLoading(true);
+    Api.get('markUps')
+      .then(res => {
+        setMarkUps(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setError('Erro ao carregar markUps.');
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (markUp?.id) {
+      setSelectMarkUpId(markUp.id);
+    }
+  }, [markUp]);
+
+  const selectedMarkUp = useMemo((): IMarkUp | null => {
+    if (!selectedMarkUpId) return null;
+    return markUps.find(item => item.id === selectedMarkUpId) || null;
+  }, [selectedMarkUpId, markUps]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setCost(state => ({
-      ...state,
-    }));
+
+    if (!selectedMarkUp) {
+      alert('Por favor, selecione um MarkUp válido.');
+      return;
+    }
+
+    const markUpChosen: IMarkUp = {
+      id: selectedMarkUp.id,
+      name: selectedMarkUp.name,
+      taxes: selectedMarkUp.taxes ?? 0,
+      admin: selectedMarkUp.admin ?? 0,
+      freight: selectedMarkUp.freight ?? 0,
+      commission: selectedMarkUp.commission ?? 0,
+      financial: selectedMarkUp.financial ?? 0,
+      marketing: selectedMarkUp.marketing ?? 0,
+      promoters: selectedMarkUp.promoters ?? 0,
+      bonus: selectedMarkUp.bonus ?? 0,
+      profit: selectedMarkUp.profit ?? 0,
+    };
+
+    setCost({
+      ...cost, // Usando a prop cost diretamente
+      markUpProduct: markUpChosen,
+    });
+
     onCloseModal();
-  }
+  };
+
+  if (loading) return <Typography>Carregando...</Typography>;
+  if (error) return <Typography>{error}</Typography>;
 
   return (
     <form id="header-form" onSubmit={handleSubmit}>
@@ -32,7 +90,7 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal }) => 
               onChange={e =>
                 setCost({
                   ...cost,
-                  cod: e.currentTarget.value.toLocaleUpperCase(),
+                  cod: e.currentTarget.value.toUpperCase(),
                 })
               }
             />
@@ -48,7 +106,7 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal }) => 
               onChange={e =>
                 setCost({
                   ...cost,
-                  name: e.currentTarget.value.toLocaleUpperCase(),
+                  name: e.currentTarget.value.toUpperCase(),
                 })
               }
             />
@@ -75,12 +133,12 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal }) => 
                 label="Quantidade"
                 name="qt"
                 placeholder="Informe a quantidade"
-                onChange={e =>
-                  setCost({
-                    ...cost,
-                    qt: Number(e.currentTarget.value),
-                  })
-                }
+                onChange={e => {
+                  const value = Number(e.currentTarget.value);
+                  if (value >= 0) {
+                    setCost({ ...cost, qt: value });
+                  }
+                }}
               />
             </Grid>
           </Grid>
@@ -126,6 +184,21 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal }) => 
                   })
                 }
               />
+            </Grid>
+
+            <Grid size={4}>
+              <SelectOptions
+                value={selectedMarkUpId ?? ''}
+                onChange={e => setSelectMarkUpId(e.target.value || undefined)}
+                label="Mark Up"
+              >
+                <option value="">Selecione um MarkUp</option>
+                {markUps.map(item => (
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </SelectOptions>
             </Grid>
           </Grid>
         </Grid>

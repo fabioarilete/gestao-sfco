@@ -200,5 +200,1026 @@
       "type": "Normal",
       "id": "OozK9r_"
     }
+  ],
+  "markUps": [
+    {
+      "name": "SEM ST",
+      "taxes": 13,
+      "commission": 8.7,
+      "admin": 6,
+      "freight": 9,
+      "financial": 4,
+      "promoters": 2,
+      "marketing": 2,
+      "bonus": 2,
+      "profit": 15,
+      "id": "1"
+    },
+    {
+      "name": "COM ST",
+      "taxes": 6,
+      "commission": 8.7,
+      "admin": 6,
+      "freight": 9,
+      "financial": 4,
+      "promoters": 2,
+      "marketing": 2,
+      "bonus": 2,
+      "profit": 15,
+      "id": "2"
+    },
+    {
+      "name": "TAUSTE",
+      "taxes": 12,
+      "commission": 2,
+      "admin": 4,
+      "freight": 7,
+      "financial": 4,
+      "promoters": 2,
+      "marketing": 2,
+      "bonus": 0,
+      "profit": 15,
+      "id": "3"
+    }
+  ],
+  "infoProducts": [
+    {
+      "id": "id354",
+      "cod": "354",
+      "name": "BACIA PLAST. 12 L",
+      "priceList": 12.44,
+      "mediumPrice": 11.83
+    },
+    {
+      "id": "id353",
+      "cod": "353",
+      "name": "BACIA PLAST. 32 L",
+      "priceList": 27.92,
+      "mediumPrice": 26.72
+    },
+    {
+      "id": "id357",
+      "cod": "357",
+      "name": "BALDE PLAST. 15 LT",
+      "priceList": 13.97,
+      "mediumPrice": 12.97
+    },
+    {
+      "id": "id344",
+      "cod": "344",
+      "name": "BALDE PLAST. 8 LT",
+      "priceList": 11.2,
+      "mediumPrice": 10.52
+    },
+    {
+      "id": "id372",
+      "cod": "372",
+      "name": "BALDE XANDAO 13LT",
+      "priceList": 24.79,
+      "mediumPrice": 22.82
+    },
+    {
+      "id": "id906",
+      "cod": "906",
+      "name": "CABIDE PLAST. C/3 UNID.",
+      "priceList": 6.66,
+      "mediumPrice": 6.05
+    },
+    {
+      "id": "id4893",
+      "cod": "4893",
+      "name": "CABO ALUMINIO 1,4 MT FRISADO",
+      "priceList": 23.46,
+      "mediumPrice": 23.8
+    },
+    {
+      "id": "id699",
+      "cod": "371",
+      "name": "CESTO P/ ROUPA 30 L",
+      "priceList": 40.23,
+      "mediumPrice": 38.22
+    },
+    {
+      "id": "id985",
+      "cod": "7",
+      "name": "COADOR PARA CAFE 100MM",
+      "priceList": 7.98,
+      "mediumPrice": 7.59
+    },
+    {
+      "id": "id695",
+      "cod": "63",
+      "name": "CONJ. MARMITA - DONA XEPA (3 PCS)",
+      "priceList": 30.67,
+      "mediumPrice": 30.67
+    },
+    {
+      "id": "id371",
+      "cod": "75",
+      "name": "EMBALAGEM P/ FREEZER 2L DONA XEPA",
+      "priceList": 4.08,
+      "mediumPrice": 3.9
+    },
+    {
+      "id": "id7",
+      "cod": "74",
+      "name": "EMBALAGEM P/ FREEZER 3L DONA XEPA",
+      "priceList": 4.71,
+      "mediumPrice": 4.41
+    },
+    {
+      "id": "id574",
+      "cod": "73",
+      "name": "EMBALAGEM P/ FREEZER 5L DONAigans XEPA",
+      "priceList": 5.45,
+      "mediumPrice": 5.06
+    },
+    {
+      "id": "id63",
+      "cod": "329",
+      "name": "ESCOVA HORSE MAD.",
+      "priceList": 10.19,
+      "mediumPrice": 8.9
+    },
+    {
+      "id": "id75",
+      "cod": "493",
+      "name": "ESCOVA LAVA COSTAS WASH",
+      "priceList": 11.75,
+      "mediumPrice": 10.55
+    },
+    {
+      "id": "id74",
+      "cod": "351",
+      "name": "ESCOVA NAGRAXA",
+      "priceList": 7.87,
+      "mediumPrice": 7.59
+    },
+    {
+      "id": "id73",
+      "cod": "328",
+      "name": "ESCOVA P/ LUSTRAR CAVALO MAD.",
+      "priceList": 10.28,
+      "mediumPrice": 8.9
+    },
+    {
+      "id": "id329",
+      "cod": "356",
+      "name": "ESCOVA PARA UNHA BELLA",
+      "priceList": 3.28,
+      "mediumPrice": 2.89
+    },
+    {
+      "id": "id493",
+      "cod": "340",
+      "name": "ESCOVA SCOVY JEANS MAD",
+      "priceList": 3.62,
+      "mediumPrice": 3.38
+    },
+    {
+      "id": "id351",
+      "cod": "380",
+      "name": "ESCOVA SCOVY JEANS MAIS",
+      "priceList": 6.84,
+      "mediumPrice": 6.55
+    },
+    {
+      "id": "id328",
+      "cod": "370",
+      "name": "ESCOVA SCOVY JEANS PLASTICA",
+      "priceList": 5.22,
+      "mediumPrice": 4.47
+    },
+    {
+      "id": "id356",
+      "cod": "319",
+      "name": "ESCOVA SCOVy LOUCA",
+      "priceList": 5.77,
+      "mediumPrice": 5.59
+    },
+    {
+      "id": "id340",
+      "cod": "341",
+      "name": "ESCOVA SCOVY MESA",
+      "priceList": 6.72,
+      "mediumPrice": 6.43
+    },
+    {
+      "id": "id380",
+      "cod": "320",
+      "name": "ESCOVA SCOVY PANELA",
+      "priceList": 5.47,
+      "mediumPrice": 5.22
+    },
+    {
+      "id": "id370",
+      "cod": "367",
+      "name": "ESCOVA TIRAPELO",
+      "priceList": 7.49,
+      "mediumPrice": 7.14
+    },
+    {
+      "id": "id319",
+      "cod": "360",
+      "name": "ESFREGAO NUPIZO CERA 25 MAD. CB.MAD. RP",
+      "priceList": 12.84,
+      "mediumPrice": 12.24
+    },
+    {
+      "id": "id341",
+      "cod": "364",
+      "name": "ESFREGAO NUPIZO CERA 25 PLAST. CB.MAD. RP",
+      "priceList": 12.56,
+      "mediumPrice": 11.21
+    },
+    {
+      "id": "id320",
+      "cod": "361",
+      "name": "ESFREGAO NUPIZO ESPECIAL CB.MAD. RP",
+      "priceList": 23.36,
+      "mediumPrice": 22.12
+    },
+    {
+      "id": "id367",
+      "cod": "72",
+      "name": "ESFREGAO NUPIZO LIMPA VIDRO",
+      "priceList": 13.47,
+      "mediumPrice": 12.45
+    },
+    {
+      "id": "id360",
+      "cod": "363",
+      "name": "ESFREGAO NUPIZO MAD. CB.MAD. RP",
+      "priceList": 13.8,
+      "mediumPrice": 13.04
+    },
+    {
+      "id": "id364",
+      "cod": "369",
+      "name": "ESFREGAO NUPIZO MAX CERA PLAST. CB.MAD. RP",
+      "priceList": 14.59,
+      "mediumPrice": 13.6
+    },
+    {
+      "id": "id361",
+      "cod": "368",
+      "name": "ESFREGAO NUPIZO MAX PLAST. CB.MAD. RP",
+      "priceList": 14.99,
+      "mediumPrice": 14.11
+    },
+    {
+      "id": "id72",
+      "cod": "365",
+      "name": "ESFREGAO NUPIZO PLAST. CB.MAD. RP",
+      "priceList": 12.86,
+      "mediumPrice": 11.59
+    },
+    {
+      "id": "id720",
+      "cod": "400",
+      "name": "ESPANADOR PENA 30 CM",
+      "priceList": 42.27,
+      "mediumPrice": 39.77
+    },
+    {
+      "id": "id363",
+      "cod": "520",
+      "name": "ESPANADOR VELUDO N. 2",
+      "priceList": 21.61,
+      "mediumPrice": 20.07
+    },
+    {
+      "id": "id369",
+      "cod": "525",
+      "name": "ESPANADOR VELUDO N. 3",
+      "priceList": 25.24,
+      "mediumPrice": 23.98
+    },
+    {
+      "id": "id368",
+      "cod": "61",
+      "name": "ESPATULA GOURMET - DONA XEPA",
+      "priceList": 4.99,
+      "mediumPrice": 4.11
+    },
+    {
+      "id": "id365",
+      "cod": "62",
+      "name": "ESPATULA P/ BOLO - DONA XEPA",
+      "priceList": 4.99,
+      "mediumPrice": 4.16
+    },
+    {
+      "id": "id400",
+      "cod": "500",
+      "name": "ESPONJA COCO GRANDE",
+      "priceList": 14.72,
+      "mediumPrice": 13.79
+    },
+    {
+      "id": "id520",
+      "cod": "499",
+      "name": "ESPONJA COCO PEQUENA",
+      "priceList": 11.0,
+      "mediumPrice": 10.34
+    },
+    {
+      "id": "id525",
+      "cod": "25",
+      "name": "ESPONJA ESFREMAX FRENTE E VERSO",
+      "priceList": 2.79,
+      "mediumPrice": 2.58
+    },
+    {
+      "id": "id61",
+      "cod": "35",
+      "name": "ESPONJA ESFREMAX PROTEGE UNHAS",
+      "priceList": 1.89,
+      "mediumPrice": 1.74
+    },
+    {
+      "id": "id62",
+      "cod": "22",
+      "name": "ESPONJA ESFREMAX TEFLON",
+      "priceList": 1.37,
+      "mediumPrice": 1.21
+    },
+    {
+      "id": "id500",
+      "cod": "34",
+      "name": "ESPONJA ESFREMAX TEFLON 4 UN",
+      "priceList": 4.41,
+      "mediumPrice": 3.83
+    },
+    {
+      "id": "id499",
+      "cod": "21",
+      "name": "ESPONJA ESFREMAX TRADICIONAL",
+      "priceList": 1.12,
+      "mediumPrice": 0.98
+    },
+    {
+      "id": "id25",
+      "cod": "32",
+      "name": "ESPONJA ESFREMAX TRADICIONAL 4 UN",
+      "priceList": 3.69,
+      "mediumPrice": 3.21
+    },
+    {
+      "id": "id35",
+      "cod": "31",
+      "name": "ESPONJA GRANDCAR",
+      "priceList": 4.68,
+      "mediumPrice": 4.14
+    },
+    {
+      "id": "id22",
+      "cod": "26",
+      "name": "ESPONJA HARMONIC BUCH",
+      "priceList": 8.09,
+      "mediumPrice": 7.74
+    },
+    {
+      "id": "id34",
+      "cod": "28",
+      "name": "ESPONJA HARMONIC ESPECIAL P/ BANHO",
+      "priceList": 2.38,
+      "mediumPrice": 2.1
+    },
+    {
+      "id": "id21",
+      "cod": "29",
+      "name": "ESPONJA HARMONIC KIDS",
+      "priceList": 2.37,
+      "mediumPrice": 1.98
+    },
+    {
+      "id": "id32",
+      "cod": "27",
+      "name": "ESPONJA HARMONIC NATURE",
+      "priceList": 6.01,
+      "mediumPrice": 5.74
+    },
+    {
+      "id": "id31",
+      "cod": "30",
+      "name": "ESPONJA HARMONIC SPUMA",
+      "priceList": 2.42,
+      "mediumPrice": 2.16
+    },
+    {
+      "id": "id26",
+      "cod": "505",
+      "name": "ESPONJA INOXXCEU",
+      "priceList": 3.05,
+      "mediumPrice": 2.94
+    },
+    {
+      "id": "id28",
+      "cod": "560",
+      "name": "FIO VARAL ACO ENCAPADO 10M",
+      "priceList": 5.11,
+      "mediumPrice": 4.9
+    },
+    {
+      "id": "id29",
+      "cod": "555",
+      "name": "FIO VARAL NYLON N5",
+      "priceList": 2.97,
+      "mediumPrice": 2.85
+    },
+    {
+      "id": "id27",
+      "cod": "346",
+      "name": "FLANELA GRANDE 35 X 57 CM",
+      "priceList": 5.87,
+      "mediumPrice": 5.47
+    },
+    {
+      "id": "id30",
+      "cod": "345",
+      "name": "FLANELA PEQUENA 28 X 35 CM",
+      "priceList": 4.01,
+      "mediumPrice": 3.74
+    },
+    {
+      "id": "id505",
+      "cod": "77",
+      "name": "GOTEJADOR P/ PLANTAS",
+      "priceList": 5.49,
+      "mediumPrice": 5.4
+    },
+    { "id": "id560", "cod": "352", "name": "LUVA GRANDE", "priceList": 7.12, "mediumPrice": 6.76 },
+    { "id": "id555", "cod": "349", "name": "LUVA MEDIA", "priceList": 7.12, "mediumPrice": 6.74 },
+    { "id": "id346", "cod": "348", "name": "LUVA PEQUENA", "priceList": 7.12, "mediumPrice": 6.78 },
+    {
+      "id": "id345",
+      "cod": "620",
+      "name": "PA P/ LIXO - PEG LIXO CB CURTO PLAST",
+      "priceList": 5.82,
+      "mediumPrice": 5.58
+    },
+    {
+      "id": "id77",
+      "cod": "621",
+      "name": "PA P/ LIXO - PEG LIXO CB LONGO PLAST",
+      "priceList": 12.12,
+      "mediumPrice": 11.13
+    },
+    {
+      "id": "id352",
+      "cod": "621",
+      "name": "PA PARA LIXO PEG LIXO CABO LONGO",
+      "priceList": 12.12,
+      "mediumPrice": 7.12
+    },
+    {
+      "id": "id349",
+      "cod": "80",
+      "name": "PANO MICROFIBRA 30X30 CM",
+      "priceList": 5.34,
+      "mediumPrice": 5.1
+    },
+    {
+      "id": "id348",
+      "cod": "81",
+      "name": "PANO MICROFIBRA 40X60 CM",
+      "priceList": 10.69,
+      "mediumPrice": 10.33
+    },
+    {
+      "id": "id620",
+      "cod": "580",
+      "name": "PANO P/CHAO 38 X 74 CM",
+      "priceList": 6.79,
+      "mediumPrice": 6.55
+    },
+    {
+      "id": "id621",
+      "cod": "622",
+      "name": "PEG LIXO METAL CB. LONGO",
+      "priceList": 22.23,
+      "mediumPrice": 21.47
+    },
+    {
+      "id": "id621",
+      "cod": "60",
+      "name": "PEGADOR DE PIZZA - DONA XEPA",
+      "priceList": 8.99,
+      "mediumPrice": 7.38
+    },
+    {
+      "id": "id80",
+      "cod": "4075",
+      "name": "PENEIRA 110 MM C/CB",
+      "priceList": 5.26,
+      "mediumPrice": 4.93
+    },
+    {
+      "id": "id81",
+      "cod": "4076",
+      "name": "PENEIRA 150 MM C/CB",
+      "priceList": 7.49,
+      "mediumPrice": 7.07
+    },
+    {
+      "id": "id580",
+      "cod": "4077",
+      "name": "PENEIRA 180MM C/CB",
+      "priceList": 8.41,
+      "mediumPrice": 7.96
+    },
+    {
+      "id": "id622",
+      "cod": "4074",
+      "name": "PENEIRA 70 MM C/CB",
+      "priceList": 3.0,
+      "mediumPrice": 2.83
+    },
+    {
+      "id": "id60",
+      "cod": "4078",
+      "name": "PENEIRA PLANA 160MM",
+      "priceList": 6.47,
+      "mediumPrice": 5.97
+    },
+    {
+      "id": "id4075",
+      "cod": "4100",
+      "name": "PENEIRA PLANA 200 MM",
+      "priceList": 13.02,
+      "mediumPrice": 12.09
+    },
+    {
+      "id": "id4076",
+      "cod": "515",
+      "name": "PINCEL NYLON LAVATINA PLAST.",
+      "priceList": 5.77,
+      "mediumPrice": 5.44
+    },
+    {
+      "id": "id4077",
+      "cod": "64",
+      "name": "POTE PLAST. 1,5L - DONA XEPA",
+      "priceList": 9.21,
+      "mediumPrice": 7.83
+    },
+    {
+      "id": "id4074",
+      "cod": "68",
+      "name": "POTE PLAST. 250ML - DONA XEPA",
+      "priceList": 5.29,
+      "mediumPrice": 4.5
+    },
+    {
+      "id": "id4078",
+      "cod": "67",
+      "name": "POTE PLAST. 500ML - DONA XEPA",
+      "priceList": 6.0,
+      "mediumPrice": 5.84
+    },
+    {
+      "id": "id4100",
+      "cod": "601",
+      "name": "PRENDEDOR MAD. XANDAO",
+      "priceList": 2.64,
+      "mediumPrice": 2.55
+    },
+    {
+      "id": "id515",
+      "cod": "40",
+      "name": "PRENDEDOR PARA ALIMENTOS",
+      "priceList": 6.31,
+      "mediumPrice": 5.99
+    },
+    {
+      "id": "id64",
+      "cod": "600",
+      "name": "PRENDEDOR PLAST. XANDAO",
+      "priceList": 4.65,
+      "mediumPrice": 4.5
+    },
+    {
+      "id": "id68",
+      "cod": "630",
+      "name": "PUSH PIA (DESENTUPIDOR PARA PIA)",
+      "priceList": 8.33,
+      "mediumPrice": 8.04
+    },
+    {
+      "id": "id67",
+      "cod": "640",
+      "name": "PUSH SANITARIO",
+      "priceList": 11.13,
+      "mediumPrice": 10.65
+    },
+    {
+      "id": "id601",
+      "cod": "585",
+      "name": "RALA PE EMBORRACHADA",
+      "priceList": 7.88,
+      "mediumPrice": 7.45
+    },
+    { "id": "id40", "cod": "579", "name": "RALA PE MAD.", "priceList": 7.88, "mediumPrice": 7.42 },
+    {
+      "id": "id600",
+      "cod": "583",
+      "name": "RALA-PE PLAST.",
+      "priceList": 7.88,
+      "mediumPrice": 7.56
+    },
+    {
+      "id": "id630",
+      "cod": "2500",
+      "name": "RODO DUPLO 1M MAD. CB ALONGADO PRG",
+      "priceList": 44.06,
+      "mediumPrice": 42.93
+    },
+    {
+      "id": "id640",
+      "cod": "200",
+      "name": "RODO DUPLO 30 MAD. CB.MAD. PRG",
+      "priceList": 14.05,
+      "mediumPrice": 12.76
+    },
+    {
+      "id": "id585",
+      "cod": "2001",
+      "name": "RODO DUPLO 30 MAD. CB.MAD. RP",
+      "priceList": 14.05,
+      "mediumPrice": 12.44
+    },
+    {
+      "id": "id579",
+      "cod": "220",
+      "name": "RODO DUPLO 40 MAD. CB.MAD. PRG",
+      "priceList": 15.42,
+      "mediumPrice": 13.83
+    },
+    {
+      "id": "id583",
+      "cod": "2201",
+      "name": "RODO DUPLO 40 MAD. CB.MAD. RP",
+      "priceList": 15.42,
+      "mediumPrice": 13.49
+    },
+    {
+      "id": "id2500",
+      "cod": "245",
+      "name": "RODO DUPLO 60 MAD. CB.MAD. ALONGADO PRG",
+      "priceList": 25.53,
+      "mediumPrice": 23.35
+    },
+    {
+      "id": "id200",
+      "cod": "646",
+      "name": "RODO PIA PUXA E SECA PLAST.",
+      "priceList": 5.76,
+      "mediumPrice": 5.57
+    },
+    {
+      "id": "id2001",
+      "cod": "275",
+      "name": "RODO PUXA E SECA 30 PLAST",
+      "priceList": 15.35,
+      "mediumPrice": 13.23
+    },
+    {
+      "id": "id220",
+      "cod": "275",
+      "name": "RODO PUXA E SECA 30 PLASTICO",
+      "priceList": 15.35,
+      "mediumPrice": 5.54
+    },
+    {
+      "id": "id2201",
+      "cod": "276",
+      "name": "RODO PUXA E SECA 40 PLAST",
+      "priceList": 16.91,
+      "mediumPrice": 14.55
+    },
+    {
+      "id": "id245",
+      "cod": "276",
+      "name": "RODO PUXA E SECA 40 PLASTICO",
+      "priceList": 16.91,
+      "mediumPrice": 6.65
+    },
+    {
+      "id": "id646",
+      "cod": "278",
+      "name": "RODO PUXA E SECA 60 PLASTICO",
+      "priceList": 29.38,
+      "mediumPrice": 25.35
+    },
+    {
+      "id": "id275",
+      "cod": "347",
+      "name": "SACO ALVEJADO 45X65 CM",
+      "priceList": 6.03,
+      "mediumPrice": 5.64
+    },
+    {
+      "id": "id275",
+      "cod": "514",
+      "name": "SACO P/LIXO 100L PRETO",
+      "priceList": 6.31,
+      "mediumPrice": 5.3
+    },
+    {
+      "id": "id276",
+      "cod": "513",
+      "name": "SACO P/LIXO 15L PRETO",
+      "priceList": 6.1,
+      "mediumPrice": 5.07
+    },
+    {
+      "id": "id276",
+      "cod": "512",
+      "name": "SACO P/LIXO 30L PRETO",
+      "priceList": 6.1,
+      "mediumPrice": 5.08
+    },
+    {
+      "id": "id278",
+      "cod": "511",
+      "name": "SACO P/LIXO 50L PRETO",
+      "priceList": 6.31,
+      "mediumPrice": 5.36
+    },
+    {
+      "id": "id347",
+      "cod": "589",
+      "name": "SACO PRETO ROLO - XANDAO 100L C/10",
+      "priceList": 8.96,
+      "mediumPrice": 7.77
+    },
+    {
+      "id": "id514",
+      "cod": "586",
+      "name": "SACO PRETO ROLO - XANDAO 15L C/40",
+      "priceList": 8.62,
+      "mediumPrice": 7.43
+    },
+    {
+      "id": "id513",
+      "cod": "587",
+      "name": "SACO PRETO ROLO - XANDAO 30L C/20",
+      "priceList": 8.62,
+      "mediumPrice": 7.46
+    },
+    {
+      "id": "id512",
+      "cod": "588",
+      "name": "SACO PRETO ROLO - XANDAO 50L C/20",
+      "priceList": 8.96,
+      "mediumPrice": 7.76
+    },
+    {
+      "id": "id511",
+      "cod": "538",
+      "name": "SCOVY VASO C/POTE",
+      "priceList": 12.0,
+      "mediumPrice": 10.95
+    },
+    {
+      "id": "id589",
+      "cod": "537",
+      "name": "SCOVY VASO S/POTE",
+      "priceList": 7.78,
+      "mediumPrice": 7.23
+    },
+    {
+      "id": "id586",
+      "cod": "76",
+      "name": "SUPORTE MULTIFUNCIONAL XANDAO",
+      "priceList": 8.31,
+      "mediumPrice": 7.41
+    },
+    {
+      "id": "id587",
+      "cod": "582",
+      "name": "ULTRA CLEAN - MULTIUSO - C/ 2UN",
+      "priceList": 8.03,
+      "mediumPrice": 7.91
+    },
+    {
+      "id": "id588",
+      "cod": "160",
+      "name": "VAS BELLINHA PLAST",
+      "priceList": 12.29,
+      "mediumPrice": 10.11
+    },
+    {
+      "id": "id538",
+      "cod": "150",
+      "name": "VAS CLASSICA",
+      "priceList": 15.63,
+      "mediumPrice": 13.68
+    },
+    {
+      "id": "id537",
+      "cod": "158",
+      "name": "VAS. BRUXINHA MAD. CB.MAD. RP",
+      "priceList": 11.15,
+      "mediumPrice": 9.48
+    },
+    {
+      "id": "id76",
+      "cod": "159",
+      "name": "VAS. BRUXINHA PLAST",
+      "priceList": 10.55,
+      "mediumPrice": 8.76
+    },
+    {
+      "id": "id582",
+      "cod": "105",
+      "name": "VAS. DARRUA CB.MAD. RP",
+      "priceList": 14.78,
+      "mediumPrice": 13.77
+    },
+    {
+      "id": "id160",
+      "cod": "134",
+      "name": "VAS. GRAN LIZA PLAST. CB.MAD. RP",
+      "priceList": 18.43,
+      "mediumPrice": 17.49
+    },
+    {
+      "id": "id150",
+      "cod": "330",
+      "name": "VAS. LAVA ENXUGA MAD. CB.MAD. RP",
+      "priceList": 18.25,
+      "mediumPrice": 17.69
+    },
+    {
+      "id": "id158",
+      "cod": "167",
+      "name": "VAS. LIMPA TETO",
+      "priceList": 25.73,
+      "mediumPrice": 24.99
+    },
+    { "id": "id159", "cod": "117", "name": "VAS. LIZA", "priceList": 14.78, "mediumPrice": 14.18 },
+    {
+      "id": "id105",
+      "cod": "104",
+      "name": "VAS. NYLON 5 MAD. CB.MAD. RP",
+      "priceList": 20.14,
+      "mediumPrice": 20.4
+    },
+    {
+      "id": "id134",
+      "cod": "1001",
+      "name": "VAS. NYLON 6 MAD CB MAD RP",
+      "priceList": 22.29,
+      "mediumPrice": 21.27
+    },
+    {
+      "id": "id330",
+      "cod": "139",
+      "name": "VAS. NYLON SINTETICO 40 PLAST. CB.MAD. RP",
+      "priceList": 23.08,
+      "mediumPrice": 22.29
+    },
+    {
+      "id": "id167",
+      "cod": "140",
+      "name": "VAS. NYLON SINTETICO 60 MAD. CB.MAD. ALONGADO RM",
+      "priceList": 28.9,
+      "mediumPrice": 28.66
+    },
+    {
+      "id": "id117",
+      "cod": "131",
+      "name": "VAS. NYLON SINTETICO MAD. CB.MAD. RP",
+      "priceList": 14.21,
+      "mediumPrice": 13.6
+    },
+    {
+      "id": "id104",
+      "cod": "162",
+      "name": "VAS. PARA JARDIM XERETA",
+      "priceList": 16.9,
+      "mediumPrice": 16.03
+    },
+    {
+      "id": "id1001",
+      "cod": "124",
+      "name": "VAS. PELO PLAST. CB.MAD. RP",
+      "priceList": 34.44,
+      "mediumPrice": 32.38
+    },
+    {
+      "id": "id139",
+      "cod": "120",
+      "name": "VAS. PIACAVA 5 MAD. CB.MAD. RP",
+      "priceList": 21.91,
+      "mediumPrice": 20.83
+    },
+    {
+      "id": "id140",
+      "cod": "115",
+      "name": "VAS. PIACAVA 6 MAD. CB.MAD. RP",
+      "priceList": 24.59,
+      "mediumPrice": 23.16
+    },
+    {
+      "id": "id131",
+      "cod": "122",
+      "name": "VAS. PISCINA 40 PLAST. CB.MAD. ALONGADO RM",
+      "priceList": 19.78,
+      "mediumPrice": 18.47
+    },
+    {
+      "id": "id162",
+      "cod": "137",
+      "name": "VAS. PISCINA PLAST. CB.MAD. ALONGADO RM",
+      "priceList": 15.22,
+      "mediumPrice": 14.4
+    },
+    {
+      "id": "id129",
+      "cod": "127",
+      "name": "VAS. PORTO BELLA MAD. CB.MAD. RP",
+      "priceList": 13.56,
+      "mediumPrice": 12.79
+    },
+    {
+      "id": "id124",
+      "cod": "110",
+      "name": "VAS. ROSINHA PLAST. CB.MAD. RP",
+      "priceList": 14.78,
+      "mediumPrice": 14.19
+    },
+    {
+      "id": "id120",
+      "cod": "130",
+      "name": "VAS. SF1000 NYLON SINTETICO",
+      "priceList": 15.36,
+      "mediumPrice": 14.44
+    },
+    {
+      "id": "id115",
+      "cod": "166",
+      "name": "VAS. SISAL PARABRISA MAD. CB.MAD. PRG",
+      "priceList": 60.42,
+      "mediumPrice": 57.9
+    },
+    {
+      "id": "id121",
+      "cod": "336",
+      "name": "VAS. SO-LAVA ESPECIAL PLAST. CB.MAD. RP",
+      "priceList": 15.22,
+      "mediumPrice": 14.53
+    },
+    {
+      "id": "id122",
+      "cod": "132",
+      "name": "VAS. SUPER BELLA",
+      "priceList": 19.59,
+      "mediumPrice": 16.72
+    },
+    {
+      "id": "id137",
+      "cod": "160",
+      "name": "VASSOURA BELLINHA PLASTICO",
+      "priceList": 12.29,
+      "mediumPrice": 4.99
+    },
+    {
+      "id": "id127",
+      "cod": "159",
+      "name": "VASSOURA BRUXINHA PLASTICA",
+      "priceList": 10.55,
+      "mediumPrice": 3.75
+    },
+    {
+      "id": "id110",
+      "cod": "150",
+      "name": "VASSOURA CLASSICA",
+      "priceList": 15.63,
+      "mediumPrice": 6.41
+    },
+    {
+      "id": "id130",
+      "cod": "155",
+      "name": "VASSOURA PELO BOLA PLUSH",
+      "priceList": 44.31,
+      "mediumPrice": 42.24
+    },
+    {
+      "id": "id150",
+      "cod": "300",
+      "name": "VASSOURAO NYLON 40 MAD. S/CB",
+      "priceList": 17.05,
+      "mediumPrice": 16.77
+    },
+    {
+      "id": "id155",
+      "cod": "303",
+      "name": "VASSOURAO NYLON 40 PLAST. CB.MAD. RM",
+      "priceList": 27.18,
+      "mediumPrice": 26.5
+    }
   ]
 }
