@@ -14,7 +14,7 @@ export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
   useEffect(() => {
     const totalCost = Math.max(0, Number(cost.totalCost) || 0);
     const coef = Math.max(0, Number(cost.markUpProduct?.coef) || 0);
-    const priceList = Math.max(0, Number(cost.productInformations?.priceList) || 0);
+    const priceList = Math.max(0, Number(cost.productInformations.priceList) || 0);
     const mediumPrice = Math.max(0, Number(cost.productInformations?.mediumPrice) || 0);
     const qt = Math.max(1, Number(cost.qt) || 1);
 
@@ -43,8 +43,8 @@ export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
 
   useEffect(() => {
     const totalCost = Math.max(0, Number(cost.totalCost) || 0);
-    const precoDeTabela = Math.max(0, Number(cost.precoDeTabela) || 0);
-    const precoMedio = Math.max(0, Number(cost.precoMedio) || 0);
+    const precoDeTabela = Math.max(0, Number(cost.productInformations.priceList) || 0);
+    const precoMedio = Math.max(0, Number(cost.productInformations.mediumPrice) || 0);
 
     const encargos = Math.max(
       0,
@@ -73,12 +73,18 @@ export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
       profitProduct: profitPriceList,
       realProfitProduct: realProfit,
     }));
-  }, [cost.markUpProduct, cost.precoDeTabela, cost.totalCost, cost.precoMedio, setCost]);
+  }, [
+    cost.markUpProduct,
+    cost.productInformations.priceList,
+    cost.totalCost,
+    cost.productInformations.mediumPrice,
+    setCost,
+  ]);
 
   const qt = Math.max(1, Number(cost.qt) || 1);
   const unitSugestedPrice = Math.max(0, Number(cost.sugestedPrice) || 0) / qt;
-  const unitMediumPrice = Math.max(0, Number(cost.precoMedio) || 0) / qt;
-  const unitPriceList = Math.max(0, Number(cost.precoDeTabela) || 0) / qt;
+  const unitMediumPrice = Math.max(0, Number(cost.productInformations.mediumPrice) || 0) / qt;
+  const unitPriceList = Math.max(0, Number(cost.productInformations.priceList) || 0) / qt;
 
   return (
     <Grid container component="div" display="flex" direction="column" xs={12}>
@@ -157,14 +163,14 @@ export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
             title="Preço de Tabela - Principal"
             colorBox="#4f3c09"
             content1={formatCurrency(unitPriceList, 'BRL')}
-            content2={formatCurrency(Number(cost.precoDeTabela) || 0, 'BRL')}
+            content2={formatCurrency(Number(cost.productInformations.priceList) || 0, 'BRL')}
             content3={(Number(cost.profitProduct) || 0).toFixed(2)}
           />
           <Results
             title="Preço Médio Vendido"
             colorBox="#04570f"
             content1={formatCurrency(unitMediumPrice, 'BRL')}
-            content2={formatCurrency(Number(cost.precoMedio) || 0, 'BRL')}
+            content2={formatCurrency(Number(cost.productInformations.mediumPrice) || 0, 'BRL')}
             content3={(Number(cost.realProfitProduct) || 0).toFixed(2)}
           />
         </Grid>

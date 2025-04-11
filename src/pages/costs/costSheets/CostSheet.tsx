@@ -1,13 +1,14 @@
 import { Box, Paper } from '@mui/material';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HeaderSheet } from './HeaderSheet';
-import { ICost } from '../CostService';
 import { InitialCostState } from '../InitialCostState';
 import { CostProvider, useCosts } from '../../../shared/contexts';
 import { MaterialsSheet } from './MaterialsSheet';
 import { NormalOperationsSheet } from './NormalOperationsSheet';
 import { InjectionOperationsSheet } from './InjectionOperationsSheet';
 import { TotalsInformations } from './TotalsInformations';
+import { Api } from '../../../shared/services/api/axios-config';
+import { ICost } from '../CostService';
 
 const initialCostState = InitialCostState;
 
@@ -24,7 +25,7 @@ export const CostSheet: React.FC = () => {
       const subTotal = item.totalItemMaterial;
       return next + subTotal;
     }, 0);
-    setCost((state) => ({
+    setCost(state => ({
       ...state,
       totalMaterials: total,
     }));
@@ -39,7 +40,7 @@ export const CostSheet: React.FC = () => {
       const subTotal = item.totalItemNormalOperation;
       return next + subTotal;
     }, 0);
-    setCost((state) => ({
+    setCost(state => ({
       ...state,
       totalNormalOperations: total,
     }));
@@ -54,7 +55,7 @@ export const CostSheet: React.FC = () => {
       const subTotal = item.totalItemInjectionOperation;
       return next + subTotal;
     }, 0);
-    setCost((state) => ({
+    setCost(state => ({
       ...state,
       totalInjectionOperations: total,
     }));
@@ -85,7 +86,7 @@ export const CostSheet: React.FC = () => {
       unitCost = total / Number(cost.qt);
     }
 
-    setCost((state) => ({
+    setCost(state => ({
       ...state,
       totalCost: total,
       unitCost,
@@ -95,19 +96,19 @@ export const CostSheet: React.FC = () => {
   function removeMaterial(materialId: string): void {
     const userConfirmed = window.confirm('Tem certeza que deseja remover este material?');
     if (!userConfirmed) return;
-    setCost((prevState) => ({
+    setCost(prevState => ({
       ...prevState,
-      materialsProduct: prevState.materialsProduct.filter((item) => item.uuid !== materialId),
+      materialsProduct: prevState.materialsProduct.filter(item => item.uuid !== materialId),
     }));
   }
 
   function removeNormalOperation(normalOperationId: string): void {
     const userConfirmed = window.confirm('Tem certeza que deseja remover esta operação?');
     if (!userConfirmed) return;
-    setCost((prevState) => ({
+    setCost(prevState => ({
       ...prevState,
       normalOperationsProduct: prevState.normalOperationsProduct.filter(
-        (item) => item.uuid !== normalOperationId,
+        item => item.uuid !== normalOperationId,
       ),
     }));
   }
@@ -115,12 +116,55 @@ export const CostSheet: React.FC = () => {
   function removeInjectionOperation(injectionOperationId: string): void {
     const userConfirmed = window.confirm('Tem certeza que deseja remover esta operação?');
     if (!userConfirmed) return;
-    setCost((prevState) => ({
+    setCost(prevState => ({
       ...prevState,
       injectionOperationsProduct: prevState.injectionOperationsProduct.filter(
-        (item) => item.uuid !== injectionOperationId,
+        item => item.uuid !== injectionOperationId,
       ),
     }));
+  }
+
+  function addCost(cost: ICost) {
+    const data = {
+      ...cost,
+      materialsProduct: cost.materialsProduct.map(material => ({
+        uuid: material.uuid,
+        qt: material.qt,
+        obs: material.obs,
+        totalItemMaterial: material.totalItemMaterial,
+      })),
+      normalOperationsProduct: cost.normalOperationsProduct.map(operation => ({
+        uuid: operation.uuid,
+        obs: operation.obs,
+        qt: operation.qt,
+        totalItemNormalOperation: operation.totalItemNormalOperation,
+      })),
+      injectionOperationsProduct: cost.injectionOperationsProduct.map(operation => ({
+        uuid: operation.uuid,
+        obs: operation.obs,
+        cav: operation.cav,
+        ciclo: operation.ciclo,
+        totalItemInjectionOperation: operation.totalItemInjectionOperation,
+      })),
+      productInformations: {
+        mediumPrice: cost.productInformations.mediumPrice,
+        priceList: cost.productInformations.priceList,
+      },
+      markUpProduct: {
+        id: cost.markUpProduct.id,
+      },
+    };
+
+    Api.post('products', data)
+      .then(res => {
+        setProducts(state => [...state, { ...cost, id: res.data.id }]);
+      })
+      .catch(err => console.log(err));
+  }
+
+  function handleSubmit(cost: ICost) {
+    addCost(cost);
+    alert('Produto cadastrado com sucesso');
   }
 
   return (

@@ -16,7 +16,7 @@ export const InitialCostState: ICost = {
   totalNormalOperations: '' as any,
   totalInjectionOperations: '' as any,
   markUpProduct: '' as any,
-  productInformations: null,
+  productInformations: '' as any,
   totalCost: '' as any,
   unitCost: '' as any,
   profitProduct: '' as any,

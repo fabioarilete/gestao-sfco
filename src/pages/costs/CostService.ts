@@ -44,13 +44,11 @@ export interface ICost {
   materialsProduct: CostMaterial[];
   normalOperationsProduct: CostNormalOperations[];
   injectionOperationsProduct: CostInjectionOperations[];
-  productInformations: IProductInfo | null;
+  productInformations: IProductInfo;
   profitProduct: number;
   realProfitProduct: number;
   sugestedPrice: number;
   mediumDiscount: number;
-  precoDeTabela: number;
-  precoMedio: number;
 }
 
 export type ICostsList = ICost;

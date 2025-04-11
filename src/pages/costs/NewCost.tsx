@@ -2,9 +2,11 @@ import { LayoutBase } from '../../shared/layouts';
 import { ToolBarButtons } from '../../shared/components';
 import { CostSheet } from './costSheets/CostSheet';
 import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
 
 export const NewCost: React.FC = () => {
   const navigate = useNavigate();
+  const costSheetRef = useRef<{ submitForm: () => void }>(null);
 
   return (
     <LayoutBase
@@ -14,7 +16,7 @@ export const NewCost: React.FC = () => {
           textNewButton="Novo"
           showNewButton={false}
           showDeleteButton={true}
-          // clickingInSave={handleSubmit(handleCreateMaterial)}
+          clickingInSave={handleSubmit(handleSubmit)}
           // clickingInDelete={() => handleDelete(id)}
 
           clickingInBack={() => {
