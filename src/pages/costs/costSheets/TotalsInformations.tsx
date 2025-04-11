@@ -12,11 +12,11 @@ interface ITotalsProps {
 
 export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
   useEffect(() => {
-    const totalCost = Number(cost.totalCost) || 0;
-    const coef = Number(cost.markUpProduct?.coef) || 0;
-    const priceList = Number(cost.productInformations?.priceList) || 0;
-    const mediumPrice = Number(cost.productInformations?.mediumPrice) || 0;
-    const qt = Number(cost.qt) || 1; // Fallback para 1 para evitar divisão por zero
+    const totalCost = Math.max(0, Number(cost.totalCost) || 0);
+    const coef = Math.max(0, Number(cost.markUpProduct?.coef) || 0);
+    const priceList = Math.max(0, Number(cost.productInformations?.priceList) || 0);
+    const mediumPrice = Math.max(0, Number(cost.productInformations?.mediumPrice) || 0);
+    const qt = Math.max(1, Number(cost.qt) || 1);
 
     const sugestedPrice = totalCost * coef;
     const mediumDiscount = priceList > 0 ? ((priceList - mediumPrice) / priceList) * 100 : 0;
@@ -42,19 +42,21 @@ export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
   ]);
 
   useEffect(() => {
-    const totalCost = Number(cost.totalCost) || 0;
-    const precoDeTabela = Number(cost.precoDeTabela) || 0;
-    const precoMedio = Number(cost.precoMedio) || 0;
+    const totalCost = Math.max(0, Number(cost.totalCost) || 0);
+    const precoDeTabela = Math.max(0, Number(cost.precoDeTabela) || 0);
+    const precoMedio = Math.max(0, Number(cost.precoMedio) || 0);
 
-    const encargos =
+    const encargos = Math.max(
+      0,
       (Number(cost.markUpProduct?.taxes) || 0) +
-      (Number(cost.markUpProduct?.admin) || 0) +
-      (Number(cost.markUpProduct?.commission) || 0) +
-      (Number(cost.markUpProduct?.freight) || 0) +
-      (Number(cost.markUpProduct?.financial) || 0) +
-      (Number(cost.markUpProduct?.marketing) || 0) +
-      (Number(cost.markUpProduct?.promoters) || 0) +
-      (Number(cost.markUpProduct?.bonus) || 0);
+        (Number(cost.markUpProduct?.admin) || 0) +
+        (Number(cost.markUpProduct?.commission) || 0) +
+        (Number(cost.markUpProduct?.freight) || 0) +
+        (Number(cost.markUpProduct?.financial) || 0) +
+        (Number(cost.markUpProduct?.marketing) || 0) +
+        (Number(cost.markUpProduct?.promoters) || 0) +
+        (Number(cost.markUpProduct?.bonus) || 0),
+    );
 
     const profitPriceList =
       precoDeTabela > 0
@@ -73,18 +75,19 @@ export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
     }));
   }, [cost.markUpProduct, cost.precoDeTabela, cost.totalCost, cost.precoMedio, setCost]);
 
-  const qt = Number(cost.qt) || 1; // Fallback para 1
-  const unitSugestedPrice = Number(cost.sugestedPrice) / qt;
-  const unitMediumPrice = Number(cost.precoMedio) / qt;
-  const unitPriceList = Number(cost.precoDeTabela) / qt;
+  const qt = Math.max(1, Number(cost.qt) || 1);
+  const unitSugestedPrice = Math.max(0, Number(cost.sugestedPrice) || 0) / qt;
+  const unitMediumPrice = Math.max(0, Number(cost.precoMedio) || 0) / qt;
+  const unitPriceList = Math.max(0, Number(cost.precoDeTabela) || 0) / qt;
 
   return (
-    <Grid container display="flex" direction="column" size={12}>
+    <Grid container component="div" display="flex" direction="column" xs={12}>
       <Grid
         container
+        component="div"
         display="flex"
         direction="row"
-        size={12}
+        xs={12}
         justifyContent="flex-end"
         borderBottom={3}
         paddingBottom={2}
@@ -117,11 +120,11 @@ export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
           </Box>
         </Box>
       </Grid>
-      <Grid container display="flex" direction="row" size={12}>
-        <Grid container display="flex" direction="column" size={3} padding={2}>
+      <Grid container component="div" display="flex" direction="row" xs={12}>
+        <Grid container component="div" display="flex" direction="column" xs={3} padding={2}>
           <MarkUpSheet cost={cost} setCost={setCost} />
         </Grid>
-        <Grid container display="flex" direction="column" size={3} padding={2}>
+        <Grid container component="div" display="flex" direction="column" xs={3} padding={2}>
           <Box border={1} height="100%" display="flex" flexDirection="column">
             <Typography variant="h6" fontWeight="bold" textAlign="center">
               Observações:
@@ -134,7 +137,15 @@ export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
             </Typography>
           </Box>
         </Grid>
-        <Grid container display="flex" direction="column" size={6} padding={2} gap={4}>
+        <Grid
+          container
+          component="div"
+          display="flex"
+          direction="column"
+          xs={6}
+          padding={2}
+          gap={4}
+        >
           <Results
             title="Preço de Venda - Sugerido"
             colorBox="#4853e7"

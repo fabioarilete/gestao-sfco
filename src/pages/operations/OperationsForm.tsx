@@ -38,8 +38,9 @@ export const OperationsForm: React.FC = () => {
     formState: { errors },
   } = useForm<IOperationForm>({
     defaultValues: {
+      id: '',
       name: '',
-      valor: '' as any,
+      valor: 0, // Corrigido para número
       unit: '',
       type: '',
     },
@@ -55,6 +56,7 @@ export const OperationsForm: React.FC = () => {
           alert(res.message);
           navigate('/operations');
         } else {
+          setValue('id', res.id);
           setValue('name', res.name);
           setValue('valor', res.valor);
           setValue('unit', res.unit);
@@ -63,7 +65,7 @@ export const OperationsForm: React.FC = () => {
         }
       });
     }
-  }, [id]);
+  }, [id, navigate, setValue]);
 
   function handleSave(data: IOperationForm) {
     setIsLoading(true);
@@ -88,18 +90,19 @@ export const OperationsForm: React.FC = () => {
     }
   }
 
-  function handleCreateMaterial(data: IOperationForm) {
+  function handleCreateOperation(data: IOperationForm) {
     handleSave(data);
     setName(data.name);
     alert(`${data.name} foi cadastrado com sucesso!`);
   }
+
   function handleDelete(id: string) {
     if (confirm('Deseja realmente apagar essa operação?')) {
       OperationsService.deleteById(id).then(res => {
         if (res instanceof Error) {
           alert(res.message);
         } else {
-          alert('Operação apagado com sucesso!');
+          alert('Operação apagada com sucesso!');
           navigate('/operations');
         }
       });
@@ -114,68 +117,62 @@ export const OperationsForm: React.FC = () => {
           textNewButton="Nova"
           showNewButton={id !== 'nova'}
           showDeleteButton={id !== 'nova'}
-          clickingInSave={handleSubmit(handleCreateMaterial)}
+          clickingInSave={handleSubmit(handleCreateOperation)}
           clickingInDelete={() => handleDelete(id)}
-          clickingInNew={() => {
-            navigate('/operations/detalhe/nova');
-          }}
-          clickingInBack={() => {
-            navigate('/operations');
-          }}
+          clickingInNew={() => navigate('/operations/detalhe/nova')}
+          clickingInBack={() => navigate('/operations')}
         />
       }
     >
-      <form>
+      <form onSubmit={handleSubmit(handleCreateOperation)}>
         <Box component={Paper} variant="outlined" margin={1} display="flex" flexDirection="column">
           <Grid>{isLoading && <LinearProgress variant="indeterminate" />}</Grid>
           <Grid container direction="column" padding={2} spacing={2}>
-            <Grid>
+            <Grid item>
               <Typography variant="h5">Operação</Typography>
               <Typography variant="caption">Cadastre sua operação</Typography>
             </Grid>
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
-                <InputLabel>Descrição da operação</InputLabel>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
+                <InputLabel>Descrição da Operação</InputLabel>
                 <TextField
                   size="small"
                   fullWidth
                   disabled={isLoading}
                   type="text"
                   {...register('name', {
-                    required: true,
+                    required: 'Nome é obrigatório',
                     setValueAs: (value: string) => value.toUpperCase(),
                   })}
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
                 />
-                {errors?.name?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Nome é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
 
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
                 <InputLabel>Valor</InputLabel>
                 <TextField
                   size="small"
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('valor', { required: true, valueAsNumber: true })}
+                  {...register('valor', {
+                    required: 'Valor é obrigatório',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.valor}
+                  helperText={errors.valor?.message}
                 />
-                {errors?.valor?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Valor é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
 
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
                 <InputLabel>Unidade</InputLabel>
-
                 <Controller
                   name="unit"
                   control={control}
@@ -184,38 +181,37 @@ export const OperationsForm: React.FC = () => {
                     <Select
                       size="small"
                       fullWidth
-                      labelId="categoria-label"
+                      labelId="unit-label"
                       {...field}
                       onChange={e => field.onChange(e.target.value)}
                       value={field.value}
+                      error={!!errors.unit}
                     >
                       <MenuItem value="">Selecione a unidade</MenuItem>
-                      <MenuItem value="UN">UN</MenuItem>
-                      <MenuItem value="KG">KG</MenuItem>
-                      <MenuItem value="DZ">DZ</MenuItem>
-                      <MenuItem value="CX">CX</MenuItem>
-                      <MenuItem value="PT">PT</MenuItem>
-                      <MenuItem value="FD">FD</MenuItem>
-                      <MenuItem value="FX">FX</MenuItem>
-                      <MenuItem value="HR">HR</MenuItem>
-                      <MenuItem value="LT">LT</MenuItem>
-                      <MenuItem value="M2">M2</MenuItem>
-                      <MenuItem value="M3">M3</MenuItem>
+                      <MenuItem value="UN">Unidade</MenuItem>
+                      <MenuItem value="KG">Quilograma</MenuItem>
+                      <MenuItem value="CX">Caixa</MenuItem>
+                      <MenuItem value="PT">Pacote</MenuItem>
+                      <MenuItem value="LT">Litro</MenuItem>
+                      <MenuItem value="HR">Hora</MenuItem>
+                      <MenuItem value="FD">Fardo</MenuItem>
+                      <MenuItem value="FX">Feixe</MenuItem>
+                      <MenuItem value="M2">Metro Quadrado</MenuItem>
+                      <MenuItem value="M3">Metro Cúbico</MenuItem>
                     </Select>
                   )}
                 />
-                {errors?.unit?.type === 'required' && (
+                {errors.unit && (
                   <Typography variant="caption" sx={{ color: 'red' }}>
-                    Unidade é obrigatória!
+                    {errors.unit.message}
                   </Typography>
                 )}
               </Grid>
             </Grid>
 
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
                 <InputLabel>Tipo</InputLabel>
-
                 <Controller
                   name="type"
                   control={control}
@@ -224,10 +220,11 @@ export const OperationsForm: React.FC = () => {
                     <Select
                       size="small"
                       fullWidth
-                      labelId="categoria-label"
+                      labelId="type-label"
                       {...field}
                       onChange={e => field.onChange(e.target.value)}
                       value={field.value}
+                      error={!!errors.type}
                     >
                       <MenuItem value="">Selecione o tipo</MenuItem>
                       <MenuItem value="Normal">Normal</MenuItem>
@@ -235,9 +232,9 @@ export const OperationsForm: React.FC = () => {
                     </Select>
                   )}
                 />
-                {errors?.unit?.type === 'required' && (
+                {errors.type && (
                   <Typography variant="caption" sx={{ color: 'red' }}>
-                    Tipo é obrigatório!
+                    {errors.type.message}
                   </Typography>
                 )}
               </Grid>

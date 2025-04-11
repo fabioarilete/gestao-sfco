@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Grid, Typography, Box, Alert, MenuItem, TextField, CircularProgress } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Box,
+  Alert,
+  MenuItem,
+  TextField,
+  CircularProgress,
+  Button,
+} from '@mui/material';
 import { CostInjectionOperations, ICost } from '../CostService';
 import { Api } from '../../../shared/services/api/axios-config';
 import { v4 } from 'uuid';
@@ -95,70 +104,100 @@ export const InjectionOperationsForm = ({ operation, cost, setCost, onCloseModal
   }
 
   return (
-    <form id="injectionOperation-form" onSubmit={handleSubmit}>
-      <Grid container spacing={3} padding={2}>
-        <Grid item xs={12}>
-          <TextField
-            select
-            label="Operação de Injeção"
-            value={selectedOperationId || ''}
-            onChange={e => setSelectedOperationId(e.target.value)}
-            fullWidth
-          >
-            <MenuItem value="">Selecione uma operação</MenuItem>
-            {operations.map(op => (
-              <MenuItem key={op.id} value={op.id}>
-                {op.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-
-        {selectedOperation && (
+    <Box>
+      <Typography variant="h6" gutterBottom>
+        Adicione uma operação de injeção ao custo
+      </Typography>
+      <form id="injectionOperation-form" onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Box textAlign="center" mb={2}>
-              <Typography variant="subtitle1" fontWeight={500}>
-                Valor da Hora:
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {formatCurrency(selectedOperation.valor, 'BRL')}
-              </Typography>
-            </Box>
+            <TextField
+              select
+              label="Operação de Injeção"
+              value={selectedOperationId || ''}
+              onChange={e => setSelectedOperationId(e.target.value)}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value="">Selecione uma operação</MenuItem>
+              {operations.map(op => (
+                <MenuItem key={op.id} value={op.id}>
+                  {op.name}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
-        )}
 
-        <Grid item xs={12}>
-          <TextField
-            label="Observação"
-            value={obs}
-            onChange={e => setObs(e.target.value.toUpperCase())}
-            placeholder="Faça uma observação"
-            fullWidth
-          />
-        </Grid>
+          {selectedOperation && (
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  bgcolor: '#f5f5f5',
+                  p: 1,
+                  borderRadius: 1,
+                }}
+              >
+                <Typography sx={{ color: 'grey.700', fontSize: 14 }}>Valor da hora:</Typography>
+                <Typography
+                  sx={{
+                    color: 'primary.main',
+                    fontSize: 16,
+                    fontWeight: 500,
+                  }}
+                >
+                  {selectedOperation ? formatCurrency(selectedOperation.valor, 'BRL') : ''}
+                </Typography>
+              </Box>
+            </Grid>
+          )}
 
-        <Grid item xs={6}>
-          <TextField
-            type="number"
-            label="Cavidades"
-            value={cav}
-            onChange={e => setCav(Number(e.target.value))}
-            inputProps={{ min: 0 }}
-            fullWidth
-          />
-        </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Observação"
+              value={obs}
+              onChange={e => setObs(e.target.value.toUpperCase())}
+              placeholder="Faça uma observação"
+              fullWidth
+              size="small"
+            />
+          </Grid>
 
-        <Grid item xs={6}>
-          <TextField
-            type="number"
-            label="Ciclo (s)"
-            value={ciclo}
-            onChange={e => setCiclo(Number(e.target.value))}
-            inputProps={{ min: 0 }}
-            fullWidth
-          />
+          <Grid item xs={6}>
+            <TextField
+              type="number"
+              label="Cavidades"
+              value={cav}
+              onChange={e => setCav(Number(e.target.value))}
+              inputProps={{ min: 0 }}
+              fullWidth
+              size="small"
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              type="number"
+              label="Ciclo (s)"
+              value={ciclo}
+              onChange={e => setCiclo(Number(e.target.value))}
+              inputProps={{ min: 0 }}
+              fullWidth
+              size="small"
+            />
+          </Grid>
         </Grid>
-      </Grid>
-    </form>
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button type="submit" variant="contained" color="primary" form="injectionOperation-form">
+            Salvar
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={onCloseModal} sx={{ ml: 1 }}>
+            Cancelar
+          </Button>
+        </Box>
+      </form>
+    </Box>
   );
 };

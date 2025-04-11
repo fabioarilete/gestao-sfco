@@ -105,7 +105,7 @@ export const MarkUpsForm: React.FC = () => {
         }
       });
     }
-  }, [id]);
+  }, [id, navigate, setValue]);
 
   function handleSave(data: IMarkUpsForm) {
     setIsLoading(true);
@@ -136,6 +136,7 @@ export const MarkUpsForm: React.FC = () => {
     setName(data.name);
     alert(`${data.name} foi cadastrado com sucesso!`);
   }
+
   function handleDelete(id: string) {
     if (confirm('Deseja realmente apagar esse markUp?')) {
       MarkUpsService.deleteById(id).then(res => {
@@ -159,181 +160,192 @@ export const MarkUpsForm: React.FC = () => {
           showDeleteButton={id !== 'novo'}
           clickingInSave={handleSubmit(handleCreateMarkUp)}
           clickingInDelete={() => handleDelete(id)}
-          clickingInNew={() => {
-            navigate('/markUps/detalhe/novo');
-          }}
-          clickingInBack={() => {
-            navigate('/markUps');
-          }}
+          clickingInNew={() => navigate('/markUps/detalhe/novo')}
+          clickingInBack={() => navigate('/markUps')}
         />
       }
     >
-      <form>
+      <form onSubmit={handleSubmit(handleCreateMarkUp)}>
         <Box component={Paper} variant="outlined" margin={1} display="flex" flexDirection="column">
           <Grid>{isLoading && <LinearProgress variant="indeterminate" />}</Grid>
           <Grid container direction="column" padding={2} spacing={2}>
-            <Grid>
+            <Grid item>
               <Typography variant="h5">Mark Up</Typography>
               <Typography variant="caption">Cadastre seu Mark Up</Typography>
             </Grid>
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
-                <InputLabel>Descrição do Material</InputLabel>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
+                <InputLabel>Descrição do Mark Up</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="text"
                   {...register('name', {
-                    required: true,
+                    required: 'Nome é obrigatório',
                     setValueAs: (value: string) => value.toUpperCase(),
                   })}
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
                 />
-                {errors?.name?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Nome é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
 
-            <Grid container size={12} direction="row" padding={2} spacing={2}>
-              <Grid size={2}>
+            <Grid container item xs={12} direction="row" padding={2} spacing={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Impostos</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('taxes', { required: true, valueAsNumber: true })}
+                  {...register('taxes', {
+                    required: 'Imposto é obrigatório',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.taxes}
+                  helperText={errors.taxes?.message}
                 />
-                {errors?.taxes?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Imposto é obrigatório!
-                  </Typography>
-                )}
               </Grid>
 
-              <Grid size={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Administração</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('admin', { required: true, valueAsNumber: true })}
+                  {...register('admin', {
+                    required: 'Administração é obrigatória',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.admin}
+                  helperText={errors.admin?.message}
                 />
-                {errors?.admin?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Administração é obrigatório!
-                  </Typography>
-                )}
               </Grid>
 
-              <Grid size={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Comissão</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('commission', { required: true, valueAsNumber: true })}
+                  {...register('commission', {
+                    required: 'Comissão é obrigatória',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.commission}
+                  helperText={errors.commission?.message}
                 />
-                {errors?.commission?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Comissão é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
 
-            <Grid container size={12} direction="row" padding={2} spacing={2}>
-              <Grid size={2}>
+            <Grid container item xs={12} direction="row" padding={2} spacing={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Frete</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('freight', { required: true, valueAsNumber: true })}
+                  {...register('freight', {
+                    required: 'Frete é obrigatório',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.freight}
+                  helperText={errors.freight?.message}
                 />
-                {errors?.freight?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Frete é obrigatório!
-                  </Typography>
-                )}
               </Grid>
 
-              <Grid size={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Financeiro</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('financial', { required: true, valueAsNumber: true })}
+                  {...register('financial', {
+                    required: 'Financeiro é obrigatório',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.financial}
+                  helperText={errors.financial?.message}
                 />
-                {errors?.financial?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Financeiro é obrigatório!
-                  </Typography>
-                )}
               </Grid>
 
-              <Grid size={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Marketing</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('marketing', { required: true, valueAsNumber: true })}
+                  {...register('marketing', {
+                    required: 'Marketing é obrigatório',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.marketing}
+                  helperText={errors.marketing?.message}
                 />
-                {errors?.marketing?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Marketing é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
 
-            <Grid container size={12} direction="row" padding={2} spacing={2}>
-              <Grid size={2}>
+            <Grid container item xs={12} direction="row" padding={2} spacing={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Promotores</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('promoters', { required: true, valueAsNumber: true })}
+                  {...register('promoters', {
+                    required: 'Promotores é obrigatório',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.promoters}
+                  helperText={errors.promoters?.message}
                 />
-                {errors?.promoters?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Promotores é obrigatório!
-                  </Typography>
-                )}
               </Grid>
 
-              <Grid size={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Bonificações</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('bonus', { required: true, valueAsNumber: true })}
+                  {...register('bonus', {
+                    required: 'Bonificações é obrigatória',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.bonus}
+                  helperText={errors.bonus?.message}
                 />
-                {errors?.bonus?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Bonificações é obrigatório!
-                  </Typography>
-                )}
               </Grid>
 
-              <Grid size={2}>
+              <Grid item xs={4} sm={4} md={2}>
                 <InputLabel>Lucro</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
-                  {...register('profit', { required: true, valueAsNumber: true })}
+                  {...register('profit', {
+                    required: 'Lucro é obrigatório',
+                    valueAsNumber: true,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
+                  })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.profit}
+                  helperText={errors.profit?.message}
                 />
-                {errors?.profit?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Lucro é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
           </Grid>

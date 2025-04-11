@@ -27,10 +27,11 @@ export const InfoProductsForm: React.FC = () => {
     formState: { errors },
   } = useForm<IInfoProductsForm>({
     defaultValues: {
+      id: '',
       cod: '',
       name: '',
-      priceList: '' as any,
-      mediumPrice: '' as any,
+      priceList: 0, // Corrigido para número
+      mediumPrice: 0, // Corrigido para número
     },
   });
 
@@ -44,6 +45,7 @@ export const InfoProductsForm: React.FC = () => {
           alert(res.message);
           navigate('/infoProducts');
         } else {
+          setValue('id', res.id);
           setValue('cod', res.cod);
           setValue('name', res.name);
           setValue('priceList', res.priceList);
@@ -52,7 +54,7 @@ export const InfoProductsForm: React.FC = () => {
         }
       });
     }
-  }, [id]);
+  }, [id, navigate, setValue]);
 
   function handleSave(data: IInfoProductsForm) {
     setIsLoading(true);
@@ -77,11 +79,12 @@ export const InfoProductsForm: React.FC = () => {
     }
   }
 
-  function handleCreateMaterial(data: IInfoProductsForm) {
+  function handleCreateProduct(data: IInfoProductsForm) {
     handleSave(data);
     setName(data.name);
     alert(`${data.name} foi cadastrado com sucesso!`);
   }
+
   function handleDelete(id: string) {
     if (confirm('Deseja realmente apagar essa informação?')) {
       InfoProductsService.deleteById(id).then(res => {
@@ -97,110 +100,96 @@ export const InfoProductsForm: React.FC = () => {
 
   return (
     <LayoutBase
-      titulo={id === 'nova' ? 'Nova Informação de produto' : name}
+      titulo={id === 'nova' ? 'Nova Informação de Produto' : name}
       toolBar={
         <ToolBarButtons
           textNewButton="Nova"
           showNewButton={id !== 'nova'}
           showDeleteButton={id !== 'nova'}
-          clickingInSave={handleSubmit(handleCreateMaterial)}
+          clickingInSave={handleSubmit(handleCreateProduct)}
           clickingInDelete={() => handleDelete(id)}
-          clickingInNew={() => {
-            navigate('/infoProducts/detalhe/novo');
-          }}
-          clickingInBack={() => {
-            navigate('/infoProducts');
-          }}
+          clickingInNew={() => navigate('/infoProducts/detalhe/nova')}
+          clickingInBack={() => navigate('/infoProducts')}
         />
       }
     >
-      <form>
+      <form onSubmit={handleSubmit(handleCreateProduct)}>
         <Box component={Paper} variant="outlined" margin={1} display="flex" flexDirection="column">
           <Grid>{isLoading && <LinearProgress variant="indeterminate" />}</Grid>
           <Grid container direction="column" padding={2} spacing={2}>
-            <Grid>
+            <Grid item>
               <Typography variant="h5">Informações de Produto</Typography>
               <Typography variant="caption">Cadastre informações do produto</Typography>
             </Grid>
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
-                <InputLabel>Código do produto</InputLabel>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
+                <InputLabel>Código do Produto</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="text"
                   {...register('cod', {
-                    required: true,
+                    required: 'Código é obrigatório',
                     setValueAs: (value: string) => value.toUpperCase(),
                   })}
+                  error={!!errors.cod}
+                  helperText={errors.cod?.message}
                 />
-                {errors?.cod?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Código é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
 
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
-                <InputLabel>Nome do produto</InputLabel>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
+                <InputLabel>Nome do Produto</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="text"
                   {...register('name', {
-                    required: true,
+                    required: 'Nome é obrigatório',
                     setValueAs: (value: string) => value.toUpperCase(),
                   })}
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
                 />
-                {errors?.name?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Nome é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
 
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
                 <InputLabel>Preço de Tabela</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
                   {...register('priceList', {
-                    required: true,
+                    required: 'Preço de Tabela é obrigatório',
                     valueAsNumber: true,
-                    setValueAs: (value: string) => value,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
                   })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.priceList}
+                  helperText={errors.priceList?.message}
                 />
-                {errors?.priceList?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Preço de Tabela é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
 
-            <Grid direction="row">
-              <Grid size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+            <Grid item>
+              <Grid xs={12} sm={12} md={8} lg={8} xl={6}>
                 <InputLabel>Preço Médio</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="number"
                   {...register('mediumPrice', {
-                    required: true,
+                    required: 'Preço Médio é obrigatório',
                     valueAsNumber: true,
-                    setValueAs: (value: string) => value,
+                    validate: value => value >= 0 || 'O valor não pode ser menor que 0',
                   })}
+                  inputProps={{ min: 0 }}
+                  error={!!errors.mediumPrice}
+                  helperText={errors.mediumPrice?.message}
                 />
-                {errors?.mediumPrice?.type === 'required' && (
-                  <Typography variant="caption" sx={{ color: 'red' }}>
-                    Preço Médio é obrigatório!
-                  </Typography>
-                )}
               </Grid>
             </Grid>
           </Grid>
