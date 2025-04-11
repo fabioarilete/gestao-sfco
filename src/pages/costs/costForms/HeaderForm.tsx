@@ -1,9 +1,21 @@
 import React, { SetStateAction, Dispatch, useState, useEffect, useMemo } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Typography,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+  CircularProgress,
+  Alert,
+} from '@mui/material';
 import { ICost } from '../CostService';
-import { Input, SelectOptions, SelectUnit, SelectYesOrNot } from '../../../shared/components';
 import { IMarkUp } from '../../markUps/MarkUpsService';
 import { Api } from '../../../shared/services/api/axios-config';
+import { IInfoProductsList } from '../../infoProducts/infoProductsService';
 
 interface Props {
   cost: ICost;
@@ -14,9 +26,31 @@ interface Props {
 
 export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markUp }) => {
   const [markUps, setMarkUps] = useState<IMarkUp[]>([]);
+  const [informations, setInformations] = useState<IInfoProductsList[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedMarkUpId, setSelectMarkUpId] = useState<string | undefined>(markUp?.id);
+
+  useEffect(() => {
+    setLoading(true);
+    Api.get('infoProducts')
+      .then(res => {
+        setInformations(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setError('Erro ao carregar informações.');
+        setLoading(false);
+      });
+  }, []);
+
+  const selectedProduct = useMemo((): IInfoProductsList | null => {
+    if (!cost.cod) return null;
+    const product = informations.find(item => item.cod === cost.cod);
+    if (!product) return null;
+    return product;
+  }, [cost.cod, informations]);
 
   useEffect(() => {
     setLoading(true);
@@ -45,7 +79,6 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markU
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (!selectedMarkUp) {
       alert('Por favor, selecione um MarkUp válido.');
       return;
@@ -63,146 +96,171 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markU
       promoters: selectedMarkUp.promoters ?? 0,
       bonus: selectedMarkUp.bonus ?? 0,
       profit: selectedMarkUp.profit ?? 0,
+      coef: selectedMarkUp.coef ?? 0,
     };
 
-    setCost({
-      ...cost, // Usando a prop cost diretamente
+    const updatedCost = {
+      ...cost,
       markUpProduct: markUpChosen,
-    });
+      productInformations: selectedProduct,
+    };
 
+    setCost(updatedCost);
     onCloseModal();
   };
 
-  if (loading) return <Typography>Carregando...</Typography>;
-  if (error) return <Typography>{error}</Typography>;
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert severity="error" sx={{ my: 2 }}>
+        {error}
+      </Alert>
+    );
+  }
 
   return (
-    <form id="header-form" onSubmit={handleSubmit}>
-      <Box>
-        <Grid container spacing={2} display="flex" flexDirection="column">
-          <Grid size={2}>
-            <Input
-              type="text"
-              value={cost.cod}
+    <Box>
+      <Typography variant="h6" gutterBottom>
+        Cadastro de Custo
+      </Typography>
+      <form id="header-form" onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
               label="Código"
               name="cod"
-              placeholder="Código"
-              onChange={e =>
-                setCost({
-                  ...cost,
-                  cod: e.currentTarget.value.toUpperCase(),
-                })
-              }
+              value={cost.cod}
+              onChange={e => setCost({ ...cost, cod: e.target.value.toUpperCase() })}
+              variant="outlined"
+              size="small"
             />
           </Grid>
-
-          <Grid size={12}>
-            <Input
-              type="text"
-              value={cost.name}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
               label="Descrição do Produto"
               name="name"
-              placeholder="Descreva o nome do produto..."
-              onChange={e =>
-                setCost({
-                  ...cost,
-                  name: e.currentTarget.value.toUpperCase(),
-                })
-              }
+              value={cost.name}
+              onChange={e => setCost({ ...cost, name: e.target.value.toUpperCase() })}
+              variant="outlined"
+              size="small"
             />
           </Grid>
-          <Grid container spacing={2} display="flex" flexDirection="row">
-            <Grid size={6}>
-              <SelectUnit
-                label="Unidade"
-                name="unit"
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="unit-label">Unidade</InputLabel>
+              <Select
+                labelId="unit-label"
                 value={cost.unit}
-                onChange={e =>
-                  setCost({
-                    ...cost,
-                    unit: e.currentTarget.value,
-                  })
-                }
-              />
-            </Grid>
-
-            <Grid size={6}>
-              <Input
-                type="number"
-                value={cost.qt}
-                label="Quantidade"
-                name="qt"
-                placeholder="Informe a quantidade"
-                onChange={e => {
-                  const value = Number(e.currentTarget.value);
-                  if (value >= 0) {
-                    setCost({ ...cost, qt: value });
-                  }
-                }}
-              />
-            </Grid>
+                onChange={e => setCost({ ...cost, unit: e.target.value })}
+                label="Unidade"
+              >
+                <MenuItem value="UN">Unidade</MenuItem>
+                <MenuItem value="KG">Quilograma</MenuItem>
+                <MenuItem value="CX">Caixa</MenuItem>
+                <MenuItem value="PT">Pacote</MenuItem>
+                <MenuItem value="LT">Litro</MenuItem>
+                <MenuItem value="HR">Hora</MenuItem>
+                <MenuItem value="FD">Fardo</MenuItem>
+                <MenuItem value="FX">Feixe</MenuItem>
+                <MenuItem value="M2">Metro Quadrado</MenuItem>
+                <MenuItem value="M3">Metro Cúbico</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
-
-          <Grid container size={12} display="flex" flexDirection="row">
-            <Grid size={4}>
-              <SelectYesOrNot
-                label="Produzido?"
-                name="type"
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Quantidade"
+              name="qt"
+              type="number"
+              value={cost.qt}
+              onChange={e => {
+                const value = Number(e.target.value);
+                if (value >= 0) setCost({ ...cost, qt: value });
+              }}
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="produzido-label">Produzido?</InputLabel>
+              <Select
+                labelId="produzido-label"
                 value={cost.type}
-                onChange={e =>
-                  setCost({
-                    ...cost,
-                    type: e.currentTarget.value,
-                  })
-                }
-              />
-            </Grid>
-
-            <Grid size={4}>
-              <SelectYesOrNot
-                label="Tem Subst.Trib?"
-                name="st"
+                onChange={e => setCost({ ...cost, type: e.target.value })}
+                label="Produzido?"
+              >
+                <MenuItem value="Sim">Sim</MenuItem>
+                <MenuItem value="Não">Não</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="st-label">Tem Subst.Trib?</InputLabel>
+              <Select
+                labelId="st-label"
                 value={cost.st}
-                onChange={e =>
-                  setCost({
-                    ...cost,
-                    st: e.currentTarget.value,
-                  })
-                }
-              />
-            </Grid>
-
-            <Grid size={4}>
-              <SelectYesOrNot
-                label="Sfco -> Stza?"
-                name="sf_st"
+                onChange={e => setCost({ ...cost, st: e.target.value })}
+                label="Tem Subst.Trib?"
+              >
+                <MenuItem value="Sim">Sim</MenuItem>
+                <MenuItem value="Não">Não</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="sf-st-label">Sfco - Stza?</InputLabel>
+              <Select
+                labelId="sf-st-label"
                 value={cost.sf_st}
-                onChange={e =>
-                  setCost({
-                    ...cost,
-                    sf_st: e.currentTarget.value,
-                  })
-                }
-              />
-            </Grid>
-
-            <Grid size={4}>
-              <SelectOptions
+                onChange={e => setCost({ ...cost, sf_st: e.target.value })}
+                label="Sfco -> Stza?"
+              >
+                <MenuItem value="Sim">Sim</MenuItem>
+                <MenuItem value="Não">Não</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="mark-up-label">Mark Up</InputLabel>
+              <Select
+                labelId="mark-up-label"
                 value={selectedMarkUpId ?? ''}
                 onChange={e => setSelectMarkUpId(e.target.value || undefined)}
                 label="Mark Up"
               >
-                <option value="">Selecione um MarkUp</option>
+                <MenuItem value="">Selecione um markUp</MenuItem>
                 {markUps.map(item => (
-                  <option value={item.id} key={item.id}>
+                  <MenuItem key={item.id} value={item.id}>
                     {item.name}
-                  </option>
+                  </MenuItem>
                 ))}
-              </SelectOptions>
-            </Grid>
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
-      </Box>
-    </form>
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button type="submit" variant="contained" color="primary" form="header-form">
+            Salvar
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={onCloseModal} sx={{ ml: 1 }}>
+            Cancelar
+          </Button>
+        </Box>
+      </form>
+    </Box>
   );
 };

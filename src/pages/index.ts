@@ -21,6 +21,7 @@ export * from './products/ProductsService';
 
 export * from './costs/CostService';
 export * from './costs/InitialCostState';
+export * from './costs/costSheets/costComponents/Results'
 
 export * from './costs/NewCost';
 

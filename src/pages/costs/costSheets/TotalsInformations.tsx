@@ -1,8 +1,9 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { ICost } from '../CostService';
 import { Box, Grid, Typography } from '@mui/material';
 import { MarkUpSheet } from './MarkUpSheet';
 import formatCurrency from '../../../shared/utils/formatCurrency';
+import { Results } from './costComponents/Results';
 
 interface ITotalsProps {
   cost: ICost;
@@ -10,116 +11,152 @@ interface ITotalsProps {
 }
 
 export const TotalsInformations = ({ cost, setCost }: ITotalsProps) => {
+  useEffect(() => {
+    const totalCost = Number(cost.totalCost) || 0;
+    const coef = Number(cost.markUpProduct?.coef) || 0;
+    const priceList = Number(cost.productInformations?.priceList) || 0;
+    const mediumPrice = Number(cost.productInformations?.mediumPrice) || 0;
+    const qt = Number(cost.qt) || 1; // Fallback para 1 para evitar divisão por zero
+
+    const sugestedPrice = totalCost * coef;
+    const mediumDiscount = priceList > 0 ? ((priceList - mediumPrice) / priceList) * 100 : 0;
+    const precoDeTabela = priceList * qt;
+    const precoMedio = mediumPrice * qt;
+    const unitCost = totalCost / qt;
+
+    setCost(state => ({
+      ...state,
+      sugestedPrice,
+      mediumDiscount,
+      precoDeTabela,
+      precoMedio,
+      unitCost,
+    }));
+  }, [
+    cost.totalCost,
+    cost.markUpProduct?.coef,
+    cost.productInformations?.priceList,
+    cost.productInformations?.mediumPrice,
+    cost.qt,
+    setCost,
+  ]);
+
+  useEffect(() => {
+    const totalCost = Number(cost.totalCost) || 0;
+    const precoDeTabela = Number(cost.precoDeTabela) || 0;
+    const precoMedio = Number(cost.precoMedio) || 0;
+
+    const encargos =
+      (Number(cost.markUpProduct?.taxes) || 0) +
+      (Number(cost.markUpProduct?.admin) || 0) +
+      (Number(cost.markUpProduct?.commission) || 0) +
+      (Number(cost.markUpProduct?.freight) || 0) +
+      (Number(cost.markUpProduct?.financial) || 0) +
+      (Number(cost.markUpProduct?.marketing) || 0) +
+      (Number(cost.markUpProduct?.promoters) || 0) +
+      (Number(cost.markUpProduct?.bonus) || 0);
+
+    const profitPriceList =
+      precoDeTabela > 0
+        ? ((precoDeTabela - totalCost - (encargos * precoDeTabela) / 100) / precoDeTabela) * 100
+        : 0;
+
+    const realProfit =
+      precoMedio > 0
+        ? ((precoMedio - totalCost - (encargos * precoMedio) / 100) / precoMedio) * 100
+        : 0;
+
+    setCost(state => ({
+      ...state,
+      profitProduct: profitPriceList,
+      realProfitProduct: realProfit,
+    }));
+  }, [cost.markUpProduct, cost.precoDeTabela, cost.totalCost, cost.precoMedio, setCost]);
+
+  const qt = Number(cost.qt) || 1; // Fallback para 1
+  const unitSugestedPrice = Number(cost.sugestedPrice) / qt;
+  const unitMediumPrice = Number(cost.precoMedio) / qt;
+  const unitPriceList = Number(cost.precoDeTabela) / qt;
+
   return (
-    <Grid container display="flex" direction="row" size={12}>
-      <MarkUpSheet cost={cost} setCost={setCost}/>
-      <Grid container display="flex" direction="column" size={3}></Grid>
-      <Grid container display="flex" direction="column" size={6}>
-        <Typography textAlign="center" variant="h5" bgcolor="#033b03" color="white" margin={2}>
-          Resultados
-        </Typography>
-
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="end"
-          marginRight={2}
-          marginBottom={1}
-        >
-          <Typography paddingX={5} variant="h6" color="#e91a1a">
-            Custo total
+    <Grid container display="flex" direction="column" size={12}>
+      <Grid
+        container
+        display="flex"
+        direction="row"
+        size={12}
+        justifyContent="flex-end"
+        borderBottom={3}
+        paddingBottom={2}
+      >
+        <Box display="flex" flexDirection="column" width="50%" marginRight={3} textAlign="center">
+          <Typography bgcolor="#a86a0c" color="white" fontWeight="bold" variant="h6">
+            Custo Total
           </Typography>
-          <Box display="flex" right={0} border={1} borderColor="#e91a1a">
-            <Typography paddingX={5} variant="h6">
-              {formatCurrency(cost.totalCost, 'BRL')}
-            </Typography>
+          <Box display="flex" flexDirection="row" flexGrow={2}>
+            <Box display="flex" flexDirection="column" flexGrow={1}>
+              <Typography bgcolor="#a86a0c" color="white" fontWeight="bold">
+                Unitário
+              </Typography>
+              <Box>
+                <Typography border={1} variant="h6">
+                  {formatCurrency(Number(cost.unitCost) || 0, 'BRL')}
+                </Typography>
+              </Box>
+            </Box>
+            <Box display="flex" flexDirection="column" flexGrow={1}>
+              <Typography bgcolor="#a86a0c" color="white" fontWeight="bold">
+                Embalagem
+              </Typography>
+              <Box>
+                <Typography border={1} variant="h6">
+                  {formatCurrency(Number(cost.totalCost) || 0, 'BRL')}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         </Box>
-
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="end"
-          marginRight={2}
-          marginBottom={1}
-        >
-          <Typography paddingX={5} variant="h6" color="#5ca4f1">
-            Preço Venda Sugerido
-          </Typography>
-          <Box display="flex" right={0} border={1} borderColor="#5ca4f1">
-            <Typography paddingX={5} variant="h6">
-              {}
+      </Grid>
+      <Grid container display="flex" direction="row" size={12}>
+        <Grid container display="flex" direction="column" size={3} padding={2}>
+          <MarkUpSheet cost={cost} setCost={setCost} />
+        </Grid>
+        <Grid container display="flex" direction="column" size={3} padding={2}>
+          <Box border={1} height="100%" display="flex" flexDirection="column">
+            <Typography variant="h6" fontWeight="bold" textAlign="center">
+              Observações:
+            </Typography>
+            <Typography color="red" textAlign="center">
+              Desconto médio aplicado:
+            </Typography>
+            <Typography variant="h5" fontWeight="bold" color="red" textAlign="center">
+              {(Number(cost.mediumDiscount) || 0).toFixed(2)}%
             </Typography>
           </Box>
-        </Box>
-
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="end"
-          marginRight={2}
-          marginBottom={1}
-        >
-          <Typography paddingX={5} variant="h6" color="#37f337">
-            Preço de tabela
-          </Typography>
-          <Box display="flex" right={0} border={1} borderColor="#37f337">
-            <Typography paddingX={5} variant="h6">
-              {}
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="end"
-          marginRight={2}
-          marginBottom={1}
-        >
-          <Typography paddingX={5} variant="h6" color="#c646e6">
-            Desconto médio
-          </Typography>
-          <Box display="flex" right={0} border={1} borderColor="#c646e6">
-            <Typography paddingX={5} variant="h6">
-              {}
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="end"
-          marginRight={2}
-          marginBottom={1}
-        >
-          <Typography paddingX={5} variant="h6" color="#f14eba">
-            Preço médio vendido
-          </Typography>
-          <Box display="flex" right={0} border={1} borderColor="#f14eba">
-            <Typography paddingX={5} variant="h6">
-              {}
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="end"
-          marginRight={2}
-          marginBottom={1}
-        >
-          <Typography paddingX={5} variant="h6" color="#e68c0d">
-            Margem - preço médio
-          </Typography>
-          <Box display="flex" right={0} border={1} borderColor="#e68c0d">
-            <Typography paddingX={5} variant="h6">
-              {}
-            </Typography>
-          </Box>
-        </Box>
+        </Grid>
+        <Grid container display="flex" direction="column" size={6} padding={2} gap={4}>
+          <Results
+            title="Preço de Venda - Sugerido"
+            colorBox="#4853e7"
+            content1={formatCurrency(unitSugestedPrice, 'BRL')}
+            content2={formatCurrency(Number(cost.sugestedPrice) || 0, 'BRL')}
+            content3={(Number(cost.markUpProduct?.profit) || 0).toFixed(2)}
+          />
+          <Results
+            title="Preço de Tabela - Principal"
+            colorBox="#4f3c09"
+            content1={formatCurrency(unitPriceList, 'BRL')}
+            content2={formatCurrency(Number(cost.precoDeTabela) || 0, 'BRL')}
+            content3={(Number(cost.profitProduct) || 0).toFixed(2)}
+          />
+          <Results
+            title="Preço Médio Vendido"
+            colorBox="#04570f"
+            content1={formatCurrency(unitMediumPrice, 'BRL')}
+            content2={formatCurrency(Number(cost.precoMedio) || 0, 'BRL')}
+            content3={(Number(cost.realProfitProduct) || 0).toFixed(2)}
+          />
+        </Grid>
       </Grid>
     </Grid>
   );

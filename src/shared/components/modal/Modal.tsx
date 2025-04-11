@@ -1,9 +1,15 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  IconButton,
+  Paper,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalProps {
   open: boolean;
@@ -13,6 +19,7 @@ interface ModalProps {
   buttonText: string;
   children: React.ReactNode;
   id: string;
+  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -23,17 +30,25 @@ const Modal: React.FC<ModalProps> = ({
   title,
   buttonText,
   children,
+  maxWidth = 'sm',
 }) => {
   return (
-    <Dialog fullWidth open={open} onClose={onClose}>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>{children}</DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancelar</Button>
-        <Button type="submit" form={id}>
-          {buttonText}
-        </Button>
-      </DialogActions>
+    <Dialog
+      fullWidth
+      maxWidth={maxWidth}
+      open={open}
+      onClose={onClose}
+      aria-labelledby="modal-title"
+      sx={{
+        '& .MuiDialog-paper': {
+          maxHeight: '80vh',
+          overflowY: 'auto',
+        },
+      }}
+    >
+      <DialogContent dividers sx={{ p: 3 }}>
+        {children}
+      </DialogContent>
     </Dialog>
   );
 };

@@ -1,26 +1,24 @@
-import { InputHTMLAttributes, FC, ReactNode } from 'react';
+import { Select, MenuItem, FormControl, InputLabel, SelectProps } from '@mui/material';
+import { FC, ReactNode } from 'react';
 
-type InputProps = InputHTMLAttributes<HTMLSelectElement> & {
+type SelectOptionsProps = SelectProps & {
   label?: string;
   children: ReactNode;
 };
 
-export const SelectOptions: FC<InputProps> = ({ value, children, name, label, ...rest }) => {
+export const SelectOptions: FC<SelectOptionsProps> = ({ value, children, name, label, ...rest }) => {
   return (
-    <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-      <label style={{ fontSize: '12px' }} htmlFor={name}>
-        {label}
-      </label>
-      <select
-        style={{ width: '100%', height: '45px' }}
-        {...rest}
+    <FormControl fullWidth>
+      {label && <InputLabel>{label}</InputLabel>}
+      <Select
+        value={value}
         name={name}
         id={name}
-        value={value || ''}
+        label={label}
+        {...rest}
       >
-        <option>Selecione uma opção</option>
         {children}
-      </select>
-    </div>
+      </Select>
+    </FormControl>
   );
 };

@@ -5,6 +5,7 @@ import { ToolBarButtons } from '../../shared/components';
 import { useForm } from 'react-hook-form';
 import { Box, Grid, InputLabel, LinearProgress, Paper, TextField, Typography } from '@mui/material';
 import { MarkUpsService } from './MarkUpsService';
+import { UseMarkUpCoef } from './hooks/useMarkUpCoef';
 
 interface IMarkUpsForm {
   id: string;
@@ -18,6 +19,7 @@ interface IMarkUpsForm {
   marketing: number;
   bonus: number;
   profit: number;
+  coef: number;
 }
 
 export const MarkUpsForm: React.FC = () => {
@@ -30,20 +32,52 @@ export const MarkUpsForm: React.FC = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<IMarkUpsForm>({
     defaultValues: {
+      id: '',
       name: '',
-      taxes: '' as any,
-      commission: '' as any,
-      admin: '' as any,
-      freight: '' as any,
-      financial: '' as any,
-      promoters: '' as any,
-      marketing: '' as any,
-      bonus: '' as any,
-      profit: '' as any,
+      taxes: 0,
+      commission: 0,
+      admin: 0,
+      freight: 0,
+      financial: 0,
+      promoters: 0,
+      marketing: 0,
+      bonus: 0,
+      profit: 0,
+      coef: 0,
     },
+  });
+
+  // Monitora os valores do formulário em tempo real
+  const formValues = watch([
+    'taxes',
+    'commission',
+    'admin',
+    'freight',
+    'financial',
+    'promoters',
+    'marketing',
+    'bonus',
+    'profit',
+  ]);
+
+  // Calcula o coeficiente com base nos valores atuais do formulário
+  const coeficiente = UseMarkUpCoef({
+    id: '',
+    name: '',
+    taxes: formValues[0] || 0,
+    commission: formValues[1] || 0,
+    admin: formValues[2] || 0,
+    freight: formValues[3] || 0,
+    financial: formValues[4] || 0,
+    promoters: formValues[5] || 0,
+    marketing: formValues[6] || 0,
+    bonus: formValues[7] || 0,
+    profit: formValues[8] || 0,
+    coef: 0,
   });
 
   useEffect(() => {
@@ -56,6 +90,7 @@ export const MarkUpsForm: React.FC = () => {
           alert(res.message);
           navigate('/markUps');
         } else {
+          setValue('id', res.id);
           setValue('name', res.name);
           setValue('taxes', res.taxes);
           setValue('admin', res.admin);
@@ -84,7 +119,7 @@ export const MarkUpsForm: React.FC = () => {
         }
       });
     } else {
-      MarkUpsService.updateById(id, { ...data }).then(res => {
+      MarkUpsService.updateById(id, { ...data, coef: coeficiente }).then(res => {
         setIsLoading(false);
         if (res instanceof Error) {
           alert(res.message);
@@ -95,7 +130,8 @@ export const MarkUpsForm: React.FC = () => {
     }
   }
 
-  function handleCreateMaterial(data: IMarkUpsForm) {
+  function handleCreateMarkUp(markUp: IMarkUpsForm) {
+    const data = { ...markUp, coef: coeficiente };
     handleSave(data);
     setName(data.name);
     alert(`${data.name} foi cadastrado com sucesso!`);
@@ -121,7 +157,7 @@ export const MarkUpsForm: React.FC = () => {
           textNewButton="Novo"
           showNewButton={id !== 'novo'}
           showDeleteButton={id !== 'novo'}
-          clickingInSave={handleSubmit(handleCreateMaterial)}
+          clickingInSave={handleSubmit(handleCreateMarkUp)}
           clickingInDelete={() => handleDelete(id)}
           clickingInNew={() => {
             navigate('/markUps/detalhe/novo');

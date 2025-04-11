@@ -19,6 +19,8 @@ export const InitialCostState: ICost = {
   productInformations: null,
   totalCost: '' as any,
   unitCost: '' as any,
-  profit: '' as any,
-  realProfit: '' as any,
+  profitProduct: '' as any,
+  realProfitProduct: '' as any,
+  sugestedPrice: '' as any,
+  mediumDiscount: '' as any,
 };

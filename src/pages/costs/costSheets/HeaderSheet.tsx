@@ -1,8 +1,8 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, Paper, Stack, IconButton, Divider } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import logo from '../../../shared/img/logosf.png';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { ICost } from '../CostService';
-import ItemInformationCost from './costComponents/ItemInformationCost';
 import { HeaderForm } from '../costForms/HeaderForm';
 import Modal from '../../../shared/components/modal/Modal';
 import { IMarkUp } from '../../markUps/MarkUpsService';
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const HeaderSheet = ({ cost, setCost, markUp }: Props) => {
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -24,12 +24,12 @@ export const HeaderSheet = ({ cost, setCost, markUp }: Props) => {
     setModalOpen(false);
   };
 
-  function handleSubmit() {
+  const handleSubmit = () => {
     setModalOpen(false);
-  }
+  };
 
   return (
-    <Box padding={2}>
+    <Box sx={{ p: 2, bgcolor: 'background.paper' }}>
       {modalOpen && (
         <Modal
           id="header-form"
@@ -38,133 +38,122 @@ export const HeaderSheet = ({ cost, setCost, markUp }: Props) => {
           onSubmit={handleSubmit}
           title="Crie seu produto"
           buttonText="Criar"
+          maxWidth="sm"
         >
           <HeaderForm
             cost={cost}
             setCost={setCost}
             markUp={markUp}
-            onCloseModal={handleCloseModal} // Passa a função para fechar o modal
+            onCloseModal={handleCloseModal}
           />
         </Modal>
       )}
-      <Grid container direction="column" padding={1} spacing="2px">
-        <Grid container direction="row">
-          <Grid
-            size={3}
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
+      <Grid container spacing={1} alignItems="center">
+        {/* Logotipo e Título */}
+        <Grid item xs={12} sm={3} md={2}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: { xs: 'center', sm: 'flex-start' },
+              justifyContent: 'center',
+              cursor: 'pointer',
+              '&:hover': { opacity: 0.8 },
+            }}
+            onClick={handleOpenModal}
           >
-            <img onClick={() => setModalOpen(true)} style={{ width: '200px' }} src={logo} />
+            <img src={logo} alt="Logotipo" style={{ maxWidth: '150px', marginBottom: '4px' }} />
             <Typography variant="h6">Planilha de Custo</Typography>
-          </Grid>
-
-          <Grid
-            size={5}
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-          ></Grid>
-
-          <Grid
-            container
-            size={4}
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid
-              container
-              margin={0}
-              size={12}
-              flexDirection="row"
-              display="flex"
-              justifyContent="end"
-              alignItems="center"
-            >
-              <ItemInformationCost title="Data:" content={`02/04/2025`} />
-              <ItemInformationCost
-                title="Tipo de Produto:"
-                content={cost.type === 'SIM' ? 'Produzido' : 'Revenda'}
-              />
-              <ItemInformationCost title="Subst. Tributária:" content={cost.st} />
-              <ItemInformationCost title="Sfco x STza:" content={cost.sf_st} />
-              <ItemInformationCost title="MarkUp:" content={cost.markUpProduct.name} />
-            </Grid>
-          </Grid>
+          </Box>
         </Grid>
-        <Grid container display="flex" flexDirection="row" mt={2}>
-          <Grid size={2} display="flex" flexDirection="column">
-            <Typography variant="caption" fontWeight="bold">
-              Código:
-            </Typography>
-            <Box
-              width="90%"
-              borderRadius="5px"
-              paddingY={1}
-              textAlign="center"
-              bgcolor="#f0eca7"
-              color="blue"
-              fontWeight="bold"
-            >
-              {cost.cod}
-            </Box>
-          </Grid>
 
-          <Grid size={6} display="flex" flexDirection="column">
-            <Typography variant="caption" fontWeight="bold">
-              Descrição do Produto:
-            </Typography>
-            <Box
-              width="95%"
-              borderRadius="5px"
-              pl="5px"
-              paddingY={1}
-              textAlign="left"
-              bgcolor="#f0eca7"
-              color="blue"
-              fontWeight="bold"
-            >
-              {cost.name}
+        {/* Informações Adicionais */}
+        <Grid item xs={12} sm={9} md={10}>
+          <Stack
+            direction={{ xs: 'column' }}
+            spacing={1}
+            justifyContent="flex-end"
+            alignItems={{ xs: 'flex-end' }}
+            sx={{ fontSize: '0.75rem' }}
+          >
+            <Box>
+              <Typography variant="caption" fontWeight="bold">
+                Data:
+              </Typography>
+              <Typography variant="caption">{new Date().toLocaleDateString('pt-BR')}</Typography>
             </Box>
-          </Grid>
+            <Box>
+              <Typography variant="caption" fontWeight="bold">
+                Tipo de Produto:
+              </Typography>
+              <Typography variant="caption">
+                {cost.type === 'Sim' ? 'Produzido' : 'Revenda'}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" fontWeight="bold">
+                Subst. Tributária:
+              </Typography>
+              <Typography variant="caption">{cost.st}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" fontWeight="bold">
+                Sfco x STza:
+              </Typography>
+              <Typography variant="caption">{cost.sf_st}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" fontWeight="bold">
+                MarkUp:
+              </Typography>
+              <Typography variant="caption">{cost.markUpProduct?.name}</Typography>
+            </Box>
+          </Stack>
+        </Grid>
+      </Grid>
 
-          <Grid size={2} display="flex" flexDirection="column">
+      {/* Campos do Produto */}
+      <Divider sx={{ my: 1 }} />
+      <Grid container spacing={1}>
+        <Grid item xs={6} sm={3} md={2}>
+          <Typography variant="caption" fontWeight="bold">
+            Código
+          </Typography>
+          <Paper sx={{ p: 0.75, textAlign: 'center' }} elevation={1}>
             <Typography variant="caption" fontWeight="bold">
-              Unidade:
+              {cost.cod || ''}
             </Typography>
-            <Box
-              width="90%"
-              borderRadius="5px"
-              paddingY={1}
-              textAlign="center"
-              bgcolor="#f0eca7"
-              color="blue"
-              fontWeight="bold"
-            >
-              {cost.unit}
-            </Box>
-          </Grid>
-
-          <Grid size={2} display="flex" flexDirection="column">
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          <Typography variant="caption" fontWeight="bold">
+            Descrição do Produto
+          </Typography>
+          <Paper sx={{ p: 0.75, textAlign: 'left' }} elevation={1}>
             <Typography variant="caption" fontWeight="bold">
-              Quantidade:
+              {cost.name || ''}
             </Typography>
-            <Box
-              width="90%"
-              borderRadius="5px"
-              paddingY={1}
-              textAlign="center"
-              bgcolor="#f0eca7"
-              color="blue"
-              fontWeight="bold"
-            >
-              {cost.qt}
-            </Box>
-          </Grid>
+          </Paper>
+        </Grid>
+        <Grid item xs={6} sm={3} md={2}>
+          <Typography variant="caption" fontWeight="bold">
+            Unidade
+          </Typography>
+          <Paper sx={{ p: 0.75, textAlign: 'center' }} elevation={1}>
+            <Typography variant="caption" fontWeight="bold">
+              {cost.unit || ''}
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={6} sm={3} md={2}>
+          <Typography variant="caption" fontWeight="bold">
+            Quantidade
+          </Typography>
+          <Paper sx={{ p: 0.75, textAlign: 'center' }} elevation={1}>
+            <Typography variant="caption" fontWeight="bold">
+              {cost.qt || ''}
+            </Typography>
+          </Paper>
         </Grid>
       </Grid>
     </Box>

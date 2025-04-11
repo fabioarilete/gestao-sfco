@@ -51,7 +51,7 @@ export const InjectionOperationsSheet = ({ cost, removeOperation, setCost, opera
   );
 
   return (
-    <Box padding={2} gap={2} borderBottom={3}>
+    <Box padding={2} gap={2}>
       <Box display="flex" flexDirection="row" gap={2}>
         <Typography
           marginLeft={1}
@@ -102,7 +102,7 @@ export const InjectionOperationsSheet = ({ cost, removeOperation, setCost, opera
       </Box>
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: "#3c4fde" }}>
+          <TableHead sx={{ backgroundColor: '#3c4fde' }}>
             <TableRow>
               <TableCell align="center">
                 <Typography color="white">Descrição da operação</Typography>
@@ -143,7 +143,7 @@ export const InjectionOperationsSheet = ({ cost, removeOperation, setCost, opera
                     <Button
                       title="Apagar o material"
                       sx={{ color: 'red' }}
-                      onClick={() => removeOperation(row.id)}
+                      onClick={() => removeOperation(row.uuid)}
                       aria-label="Apagar operação"
                     >
                       <MdDeleteForever />

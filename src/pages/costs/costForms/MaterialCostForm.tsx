@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Grid, Typography, Box } from '@mui/material';
+import { Grid, Typography, Box, TextField, MenuItem, Button } from '@mui/material';
 import { CostMaterial, ICost } from '../CostService';
-import { Input, SelectOptions } from '../../../shared/components';
+import { Input } from '../../../shared/components';
 import { IMaterial } from '../../materials/MaterialsService';
 import { Api } from '../../../shared/services/api/axios-config';
 import { v4 } from 'uuid';
@@ -11,7 +11,7 @@ interface Props {
   material?: CostMaterial;
   cost: ICost;
   setCost: React.Dispatch<React.SetStateAction<ICost>>;
-  onCloseModal: () => void; // Função para fechar o modal
+  onCloseModal: () => void;
   removeMaterial(materialId: string): void;
 }
 
@@ -25,7 +25,7 @@ export const MaterialCostForm = ({
   const [materials, setMaterials] = useState<IMaterial[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedMaterialId, setSelectMaterialId] = useState<string | undefined>(material?.id);
+  const [selectedMaterialId, setSelectedMaterialId] = useState<string | undefined>(material?.id);
   const [qt, setQt] = useState<string>(material?.qt || '');
   const [obs, setObs] = useState<string>(material?.obs || '');
 
@@ -35,13 +35,16 @@ export const MaterialCostForm = ({
       .then(res => {
         setMaterials(res.data);
         setLoading(false);
+        if (material?.id && res.data.some(item => item.id === material.id)) {
+          setSelectedMaterialId(material.id);
+        }
       })
       .catch(err => {
         console.log(err);
         setError('Erro ao carregar materiais.');
         setLoading(false);
       });
-  }, []);
+  }, [material?.id]);
 
   const selectedMaterial = useMemo((): IMaterial | null => {
     if (!selectedMaterialId) return null;
@@ -50,100 +53,137 @@ export const MaterialCostForm = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (!selectedMaterialId) {
       alert('Por favor, selecione um material.');
       return;
     }
-
     const quantity = Number(qt);
     if (isNaN(quantity) || quantity <= 0) {
       alert('A quantidade deve ser um número válido e maior que zero.');
       return;
     }
-
     if (!selectedMaterial) {
       alert('Material selecionado não encontrado.');
       return;
     }
-
     const totalItemMaterial = quantity * selectedMaterial.price;
-
     const newMaterial: CostMaterial = {
       ...selectedMaterial,
       totalItemMaterial,
-      qt, // Mantém como string para compatibilidade
+      qt,
       obs,
-      id: material?.id || v4(),
+      uuid: v4(),
       name: selectedMaterial.name ?? 'Material sem nome',
       price: selectedMaterial.price ?? 0,
       unit: selectedMaterial.unit ?? 'unidade padrão',
     };
-
     setCost(state => ({
       ...state,
       materialsProduct: material
-        ? state.materialsProduct.map(m => (m.id === material.id ? newMaterial : m)) // Edição
-        : [...state.materialsProduct, newMaterial], // Adição
+        ? state.materialsProduct.map(m => (m.id === material.id ? newMaterial : m))
+        : [...state.materialsProduct, newMaterial],
     }));
-
-    // Reseta os campos apenas em caso de adição
     if (!material) {
       setObs('');
       setQt('');
-      setSelectMaterialId(undefined);
+      setSelectedMaterialId(undefined);
     }
-
-    onCloseModal(); // Fecha o modal após submissão bem-sucedida
+    onCloseModal();
   };
 
-  if (loading) return <Typography>Carregando...</Typography>;
-  if (error) return <Typography>{error}</Typography>;
+  if (loading)
+    return (
+      <Typography sx={{ textAlign: 'center', py: 3, color: 'grey.600' }}>Carregando...</Typography>
+    );
+  if (error)
+    return (
+      <Typography sx={{ textAlign: 'center', py: 3, color: 'error.main' }}>{error}</Typography>
+    );
 
   return (
-    <form id="material-form" onSubmit={handleSubmit}>
-      <Grid container spacing={2} display="flex" flexDirection="column">
-        <Grid>
-          <SelectOptions
-            value={selectedMaterialId || ''}
-            onChange={e => setSelectMaterialId(e.target.value || undefined)}
-            label="Matéria Prima"
-          >
-            <option value="">Selecione um material</option>
-            {materials.map(item => (
-              <option value={item.id} key={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </SelectOptions>
+    <Box>
+      <Typography variant="h6" gutterBottom>
+        Adicione um material ao Custo
+      </Typography>
+      <form id="material-form" onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              select
+              label="Materiais"
+              value={selectedMaterialId || ''}
+              onChange={e => setSelectedMaterialId(e.target.value)}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value="">Selecione um material</MenuItem>
+              {materials.map(material => (
+                <MenuItem key={material.id} value={material.id}>
+                  {material.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                bgcolor: '#f5f5f5',
+                p: 1,
+                borderRadius: 1,
+              }}
+            >
+              <Typography sx={{ color: 'grey.700', fontSize: '14px' }}>
+                Preço do {selectedMaterial?.unit || 'item'}
+              </Typography>
+              <Typography
+                sx={{
+                  color: 'primary.main',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                }}
+              >
+                {selectedMaterial ? formatCurrency(selectedMaterial.price, 'BRL') : ''}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Observação"
+              name="obs"
+              value={obs}
+              onChange={e => setObs(e.currentTarget.value.toUpperCase())}
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Quantidade"
+              name="qt"
+              type="number"
+              value={qt}
+              onChange={e => setQt(e.currentTarget.value)}
+              inputProps={{ min: 0 }}
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
         </Grid>
-        <Grid>
-          <Box display="flex" justifyContent="center">
-            <Typography>Preço do {selectedMaterial?.unit || 'item'}.....</Typography>
-            {selectedMaterial ? formatCurrency(selectedMaterial.price, 'BRL') : 'N/A'}
-          </Box>
-        </Grid>
-        <Grid>
-          <Input
-            type="text"
-            value={obs}
-            label="Observação"
-            name="obs"
-            placeholder="Faça uma observação"
-            onChange={e => setObs(e.currentTarget.value.toUpperCase())}
-          />
-        </Grid>
-        <Grid>
-          <Input
-            type="number"
-            value={qt}
-            label="Quantidade"
-            name="qt"
-            placeholder="Informe a quantidade"
-            onChange={e => setQt(e.currentTarget.value)}
-          />
-        </Grid>
-      </Grid>
-    </form>
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button type="submit" variant="contained" color="primary" form="material-form">
+            Salvar
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={onCloseModal} sx={{ ml: 1 }}>
+            Cancelar
+          </Button>
+        </Box>
+      </form>
+    </Box>
   );
 };

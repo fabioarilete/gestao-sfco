@@ -56,7 +56,7 @@ export const NormalOperationsSheet = ({ cost, removeOperation, setCost, operatio
         <Typography
           marginLeft={1}
           fontWeight="bold"
-          bgcolor='#8f2e7c'
+          bgcolor="#8f2e7c"
           color="white"
           paddingX={2}
           variant="h5"
@@ -139,7 +139,7 @@ export const NormalOperationsSheet = ({ cost, removeOperation, setCost, operatio
                     <Button
                       title="Apagar o material"
                       sx={{ color: 'red' }}
-                      onClick={() => removeOperation(row.id)}
+                      onClick={() => removeOperation(row.uuid)}
                       aria-label="Apagar operação"
                     >
                       <MdDeleteForever />
@@ -163,10 +163,10 @@ export const NormalOperationsSheet = ({ cost, removeOperation, setCost, operatio
         </Table>
       </TableContainer>
       <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
-        <Typography paddingX={5} bgcolor='#8f2e7c' variant="h6" color="white">
+        <Typography paddingX={5} bgcolor="#8f2e7c" variant="h6" color="white">
           Total de Operações
         </Typography>
-        <Box display="flex" right={0} border={1} borderColor='#8f2e7c'>
+        <Box display="flex" right={0} border={1} borderColor="#8f2e7c">
           <Typography paddingX={5} variant="h6">
             {formatCurrency(totalNormalOperations, 'BRL')}
           </Typography>

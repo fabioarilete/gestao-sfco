@@ -9,21 +9,21 @@ export interface CostMaterial extends IMaterial {
   totalItemMaterial: number;
   obs: string;
   qt: string;
-  id: string;
+  uuid: string;
 }
 
 export interface CostNormalOperations extends INormalOperation {
   totalItemNormalOperation: number;
   obs: string;
   qt: number;
-  id: string;
+  uuid: string;
 }
 export interface CostInjectionOperations extends IInjectionOperation {
   totalItemInjectionOperation: number;
   obs: string;
   cav: number;
   ciclo: number;
-  id: string;
+  uuid: string;
 }
 
 export interface ICost {
@@ -45,8 +45,12 @@ export interface ICost {
   normalOperationsProduct: CostNormalOperations[];
   injectionOperationsProduct: CostInjectionOperations[];
   productInformations: IProductInfo | null;
-  profit: number;
-  realProfit: number;
+  profitProduct: number;
+  realProfitProduct: number;
+  sugestedPrice: number;
+  mediumDiscount: number;
+  precoDeTabela: number;
+  precoMedio: number;
 }
 
 export type ICostsList = ICost;

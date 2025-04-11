@@ -11,18 +11,12 @@ import { TotalsInformations } from './TotalsInformations';
 
 const initialCostState = InitialCostState;
 
-interface ITotalsProps {
-  cost: ICost;
-  setCost: Dispatch<SetStateAction<ICost>>;
-}
-
 export const CostSheet: React.FC = () => {
   const [cost, setCost] = useState<ICost>(initialCostState);
   const { products, setProducts } = useCosts();
 
   useEffect(() => {
     let total = 0;
-
     if (!cost.materialsProduct.length) {
       total = 0;
     }
@@ -30,8 +24,7 @@ export const CostSheet: React.FC = () => {
       const subTotal = item.totalItemMaterial;
       return next + subTotal;
     }, 0);
-
-    setCost(state => ({
+    setCost((state) => ({
       ...state,
       totalMaterials: total,
     }));
@@ -39,7 +32,6 @@ export const CostSheet: React.FC = () => {
 
   useEffect(() => {
     let total = 0;
-
     if (!cost.normalOperationsProduct.length) {
       total = 0;
     }
@@ -47,8 +39,7 @@ export const CostSheet: React.FC = () => {
       const subTotal = item.totalItemNormalOperation;
       return next + subTotal;
     }, 0);
-
-    setCost(state => ({
+    setCost((state) => ({
       ...state,
       totalNormalOperations: total,
     }));
@@ -56,7 +47,6 @@ export const CostSheet: React.FC = () => {
 
   useEffect(() => {
     let total = 0;
-
     if (!cost.injectionOperationsProduct.length) {
       total = 0;
     }
@@ -64,8 +54,7 @@ export const CostSheet: React.FC = () => {
       const subTotal = item.totalItemInjectionOperation;
       return next + subTotal;
     }, 0);
-
-    setCost(state => ({
+    setCost((state) => ({
       ...state,
       totalInjectionOperations: total,
     }));
@@ -73,12 +62,10 @@ export const CostSheet: React.FC = () => {
 
   useEffect(() => {
     let total = 0;
-
     if (!cost.totalMaterials && !cost.totalNormalOperations && !cost.totalInjectionOperations) {
       total = 0;
     }
-
-    if (cost.sf_st === 'SIM') {
+    if (cost.sf_st === 'Sim') {
       total =
         ((Number(cost.totalMaterials) +
           Number(cost.totalNormalOperations) +
@@ -91,21 +78,50 @@ export const CostSheet: React.FC = () => {
         Number(cost.totalNormalOperations) +
         Number(cost.totalInjectionOperations);
     }
-
     let unitCost = 0;
-    if (!total) {
+    if (!total || !cost.qt) {
       unitCost = 0;
+    } else {
+      unitCost = total / Number(cost.qt);
     }
-    unitCost = total / Number(cost.qt);
 
-    setCost(state => ({
+    setCost((state) => ({
       ...state,
       totalCost: total,
       unitCost,
     }));
-  }, [cost.totalMaterials, cost.totalNormalOperations, cost.totalInjectionOperations]);
+  }, [cost.totalMaterials, cost.totalNormalOperations, cost.totalInjectionOperations, cost.qt]);
 
-  function handleRemove() {}
+  function removeMaterial(materialId: string): void {
+    const userConfirmed = window.confirm('Tem certeza que deseja remover este material?');
+    if (!userConfirmed) return;
+    setCost((prevState) => ({
+      ...prevState,
+      materialsProduct: prevState.materialsProduct.filter((item) => item.uuid !== materialId),
+    }));
+  }
+
+  function removeNormalOperation(normalOperationId: string): void {
+    const userConfirmed = window.confirm('Tem certeza que deseja remover esta operação?');
+    if (!userConfirmed) return;
+    setCost((prevState) => ({
+      ...prevState,
+      normalOperationsProduct: prevState.normalOperationsProduct.filter(
+        (item) => item.uuid !== normalOperationId,
+      ),
+    }));
+  }
+
+  function removeInjectionOperation(injectionOperationId: string): void {
+    const userConfirmed = window.confirm('Tem certeza que deseja remover esta operação?');
+    if (!userConfirmed) return;
+    setCost((prevState) => ({
+      ...prevState,
+      injectionOperationsProduct: prevState.injectionOperationsProduct.filter(
+        (item) => item.uuid !== injectionOperationId,
+      ),
+    }));
+  }
 
   return (
     <CostProvider
@@ -116,11 +132,33 @@ export const CostSheet: React.FC = () => {
         setProducts,
       }}
     >
-      <Box component={Paper} variant="outlined" sx={{ mx: 8, width: 'auto' }}>
+      <Box
+        component={Paper}
+        variant="outlined"
+        sx={{
+          m: { xs: 2, sm: 4, md: 8 },
+          p: 2,
+          width: 'auto',
+          bgcolor: 'background.paper',
+          boxShadow: 3,
+        }}
+      >
         <HeaderSheet cost={cost} setCost={setCost} markUp={cost.markUpProduct} />
-        <MaterialsSheet cost={cost} setCost={setCost} removeMaterial={handleRemove} />
-        <NormalOperationsSheet cost={cost} setCost={setCost} removeOperation={handleRemove} />
-        <InjectionOperationsSheet cost={cost} setCost={setCost} removeOperation={handleRemove} />
+        <Box sx={{ borderTop: 1, borderColor: 'divider', my: 2 }} />
+        <MaterialsSheet cost={cost} setCost={setCost} removeMaterial={removeMaterial} />
+        <Box sx={{ borderTop: 1, borderColor: 'divider', my: 2 }} />
+        <NormalOperationsSheet
+          cost={cost}
+          setCost={setCost}
+          removeOperation={removeNormalOperation}
+        />
+        <Box sx={{ borderTop: 1, borderColor: 'divider', my: 2 }} />
+        <InjectionOperationsSheet
+          cost={cost}
+          setCost={setCost}
+          removeOperation={removeInjectionOperation}
+        />
+        <Box sx={{ borderTop: 1, borderColor: 'divider', my: 2 }} />
         <TotalsInformations cost={cost} setCost={setCost} />
       </Box>
     </CostProvider>

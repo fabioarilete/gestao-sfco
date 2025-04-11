@@ -1,31 +1,24 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Grid, Typography, Box } from '@mui/material';
+import { Grid, Typography, Box, Alert, MenuItem, TextField, CircularProgress } from '@mui/material';
 import { CostInjectionOperations, ICost } from '../CostService';
-import { Input, SelectOptions } from '../../../shared/components';
 import { Api } from '../../../shared/services/api/axios-config';
 import { v4 } from 'uuid';
 import formatCurrency from '../../../shared/utils/formatCurrency';
 import { IInjectionOperation } from '../../operations/OperationsService';
 
 interface Props {
-  operation: CostInjectionOperations | undefined; // Adicionando undefined à tipagem
+  operation: CostInjectionOperations | undefined;
   cost: ICost;
   setCost: React.Dispatch<React.SetStateAction<ICost>>;
-  onCloseModal: () => void; // Função para fechar o modal
+  onCloseModal: () => void;
   removeOperation(operationId: string): void;
 }
 
-export const InjectionOperationsForm = ({
-  operation,
-  cost,
-  setCost,
-  onCloseModal,
-  removeOperation,
-}: Props) => {
+export const InjectionOperationsForm = ({ operation, cost, setCost, onCloseModal }: Props) => {
   const [operations, setOperations] = useState<IInjectionOperation[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedOperationId, setSelectOperationId] = useState<string | undefined>(operation?.id);
+  const [selectedOperationId, setSelectedOperationId] = useState<string | undefined>(operation?.id);
   const [obs, setObs] = useState<string>(operation?.obs || '');
   const [cav, setCav] = useState<number>(operation?.cav ?? 0);
   const [ciclo, setCiclo] = useState<number>(operation?.ciclo ?? 0);
@@ -35,16 +28,17 @@ export const InjectionOperationsForm = ({
     Api.get('operations')
       .then(res => {
         setOperations(res.data);
-        setLoading(false);
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         setError('Erro ao carregar operações.');
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);
 
-  const selectedOperation = useMemo((): IInjectionOperation | null => {
+  const selectedOperation = useMemo(() => {
     if (!selectedOperationId) return null;
     return operations.find(item => item.id === selectedOperationId) || null;
   }, [selectedOperationId, operations]);
@@ -52,19 +46,13 @@ export const InjectionOperationsForm = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!selectedOperationId) {
-      alert('Por favor, selecione uma operação.');
-      return;
-    }
-
-    if (!selectedOperation) {
-      alert('Operação selecionada não encontrada.');
+    if (!selectedOperationId || !selectedOperation) {
+      alert('Por favor, selecione uma operação válida.');
       return;
     }
 
     const totalItemInjectionOperation =
-      selectedOperation.valor / (((3600 / Number(ciclo)) * Number(cav)) / Number(cost.qt));
-    console.log(totalItemInjectionOperation);
+      selectedOperation.valor / (((3600 / ciclo) * cav) / cost.qt);
 
     const newOperation: CostInjectionOperations = {
       ...selectedOperation,
@@ -72,92 +60,102 @@ export const InjectionOperationsForm = ({
       ciclo,
       cav,
       obs,
-      id: operation?.id || v4(),
+      uuid: v4(),
       name: selectedOperation.name ?? 'Operação sem nome',
       valor: selectedOperation.valor ?? 0,
     };
 
-    // Log para verificar a operação antes de atualizar
-    console.log('Nova operação:', newOperation);
+    setCost(state => ({
+      ...state,
+      injectionOperationsProduct: operation
+        ? state.injectionOperationsProduct.map(op => (op.id === operation.id ? newOperation : op))
+        : [...state.injectionOperationsProduct, newOperation],
+    }));
 
-    setCost(state => {
-      const updatedState = {
-        ...state,
-        injectionOperationsProduct: operation
-          ? state.injectionOperationsProduct.map(m => (m.id === operation.id ? newOperation : m)) // Edição
-          : [...state.injectionOperationsProduct, newOperation], // Adição
-      };
-      console.log('Updated cost state:', updatedState); // Log do estado após atualização
-      return updatedState;
-    });
-
-    // Reseta os campos apenas em caso de adição
     if (!operation) {
-      setObs(''); // Limpa o campo de observação após a adição
-      setCav(0); // Limpa o campo de cav
-      setCiclo(0); // Limpa o campo de ciclo
-      setSelectOperationId(undefined); // Limpa a operação selecionada
+      setObs('');
+      setCav(0);
+      setCiclo(0);
+      setSelectedOperationId(undefined);
     }
 
-    onCloseModal(); // Fecha o modal após a submissão bem-sucedida
+    onCloseModal();
   };
 
-  if (loading) return <Typography>Carregando...</Typography>;
-  if (error) return <Typography>{error}</Typography>;
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
 
   return (
     <form id="injectionOperation-form" onSubmit={handleSubmit}>
-      <Grid container spacing={2} display="flex" flexDirection="column">
-        <Grid>
-          <SelectOptions
-            value={selectedOperationId || ''}
-            onChange={e => setSelectOperationId(e.target.value || undefined)}
+      <Grid container spacing={3} padding={2}>
+        <Grid item xs={12}>
+          <TextField
+            select
             label="Operação de Injeção"
+            value={selectedOperationId || ''}
+            onChange={e => setSelectedOperationId(e.target.value)}
+            fullWidth
           >
-            <option value="">Selecione uma operação</option>
-            {operations.map(item => (
-              <option value={item.id} key={item.id}>
-                {item.name}
-              </option>
+            <MenuItem value="">Selecione uma operação</MenuItem>
+            {operations.map(op => (
+              <MenuItem key={op.id} value={op.id}>
+                {op.name}
+              </MenuItem>
             ))}
-          </SelectOptions>
+          </TextField>
         </Grid>
-        <Grid>
-          <Box display="flex" justifyContent="center">
-            <Typography>Valor da hora: </Typography>
-            {selectedOperation ? formatCurrency(selectedOperation.valor, 'BRL') : 'N/A'}
-          </Box>
-        </Grid>
-        <Grid>
-          <Input
-            type="text"
-            value={obs}
+
+        {selectedOperation && (
+          <Grid item xs={12}>
+            <Box textAlign="center" mb={2}>
+              <Typography variant="subtitle1" fontWeight={500}>
+                Valor da Hora:
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {formatCurrency(selectedOperation.valor, 'BRL')}
+              </Typography>
+            </Box>
+          </Grid>
+        )}
+
+        <Grid item xs={12}>
+          <TextField
             label="Observação"
-            name="obs"
+            value={obs}
+            onChange={e => setObs(e.target.value.toUpperCase())}
             placeholder="Faça uma observação"
-            onChange={e => setObs(e.currentTarget.value.toUpperCase())}
+            fullWidth
           />
         </Grid>
-        <Grid>
-          <Input
+
+        <Grid item xs={6}>
+          <TextField
             type="number"
-            value={cav}
             label="Cavidades"
-            name="cav"
-            placeholder="Informe a quantidade de cavidades"
-            min="0"
-            onChange={e => setCav(Number(e.currentTarget.value))}
+            value={cav}
+            onChange={e => setCav(Number(e.target.value))}
+            inputProps={{ min: 0 }}
+            fullWidth
           />
         </Grid>
-        <Grid>
-          <Input
+
+        <Grid item xs={6}>
+          <TextField
             type="number"
+            label="Ciclo (s)"
             value={ciclo}
-            label="Ciclo"
-            name="qt"
-            placeholder="Informe o ciclo"
-            min="0"
-            onChange={e => setCiclo(Number(e.currentTarget.value))}
+            onChange={e => setCiclo(Number(e.target.value))}
+            inputProps={{ min: 0 }}
+            fullWidth
           />
         </Grid>
       </Grid>

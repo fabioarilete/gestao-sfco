@@ -13,6 +13,7 @@ export interface IMarkUp {
   marketing: number;
   bonus: number;
   profit: number;
+  coef: number;
 }
 
 export type IMarkUpsList = IMarkUp;

@@ -57,13 +57,16 @@ export const MaterialsSheet = ({ cost, removeMaterial, setCost }: Props) => {
           Materiais
         </Typography>
         <Box
-          sx={{ cursor: 'pointer' }}
-          width="35px"
-          bgcolor="#0d5717"
-          borderRadius="50%"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
+          sx={{
+            cursor: 'pointer',
+            width: '35px',
+            bgcolor: '#0d5717',
+            borderRadius: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            '&:hover': { bgcolor: '#388e3c' },
+          }}
           onClick={() => {
             setMaterialToEdit(undefined);
             handleOpenModal();
@@ -78,7 +81,7 @@ export const MaterialsSheet = ({ cost, removeMaterial, setCost }: Props) => {
           <Modal
             open={modalOpen}
             onClose={handleCloseModal}
-            onSubmit={handleSubmit} // Será chamado junto com o submit do formulário
+            onSubmit={handleSubmit}
             title={materialToEdit ? 'Editar material' : 'Adicione material ao produto'}
             buttonText={materialToEdit ? 'Salvar' : 'Adicionar'}
             id="material-form"
@@ -88,35 +91,54 @@ export const MaterialsSheet = ({ cost, removeMaterial, setCost }: Props) => {
               setCost={setCost}
               removeMaterial={removeMaterial}
               material={materialToEdit}
-              onCloseModal={handleCloseModal} // Passa a função para fechar o modal
+              onCloseModal={handleCloseModal}
             />
           </Modal>
         )}
       </Box>
-      <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
+
+      <TableContainer
+        component={Paper}
+        variant="outlined"
+        sx={{ m: 1, width: 'auto', borderRadius: '10px' }}
+      >
         <Table size="small">
-          <TableHead sx={{ backgroundColor: '#df861a' }}>
+          <TableHead sx={{ backgroundColor: '#f0a500', borderRadius: '10px' }}>
             <TableRow>
               <TableCell align="center">
-                <Typography color="white">Descrição do Material</Typography>
+                <Typography color="white" fontWeight="bold">
+                  Descrição do Material
+                </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Observação</Typography>
+                <Typography color="white" fontWeight="bold">
+                  Observação
+                </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Quant.</Typography>
+                <Typography color="white" fontWeight="bold">
+                  Quant.
+                </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Unid.</Typography>
+                <Typography color="white" fontWeight="bold">
+                  Unid.
+                </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Valor Unit.</Typography>
+                <Typography color="white" fontWeight="bold">
+                  Valor Unit.
+                </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Valor Total</Typography>
+                <Typography color="white" fontWeight="bold">
+                  Valor Total
+                </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography color="white">Ações</Typography>
+                <Typography color="white" fontWeight="bold">
+                  Ações
+                </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -130,18 +152,18 @@ export const MaterialsSheet = ({ cost, removeMaterial, setCost }: Props) => {
                 <TableCell align="right">{formatCurrency(row.price, 'BRL')}</TableCell>
                 <TableCell align="right">{formatCurrency(row.totalItemMaterial, 'BRL')}</TableCell>
                 <TableCell align="center">
-                  <Box display="flex" justifyContent="center">
+                  <Box display="flex" justifyContent="center" gap={1}>
                     <Button
                       title="Apagar o material"
-                      sx={{ color: 'red' }}
-                      onClick={() => removeMaterial(row.id)}
+                      sx={{ color: 'red', '&:hover': { color: '#d32f2f' } }}
+                      onClick={() => removeMaterial(row.uuid)}
                       aria-label="Apagar material"
                     >
                       <MdDeleteForever />
                     </Button>
                     <Button
                       title="Editar o material"
-                      sx={{ color: 'green' }}
+                      sx={{ color: 'green', '&:hover': { color: '#388e3c' } }}
                       onClick={() => {
                         setMaterialToEdit(row);
                         handleOpenModal();
@@ -157,6 +179,7 @@ export const MaterialsSheet = ({ cost, removeMaterial, setCost }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
+
       <Box display="flex" flexDirection="row" justifyContent="end" marginRight={1}>
         <Typography paddingX={5} bgcolor="#df861a" variant="h6" color="white">
           Total de Materiais

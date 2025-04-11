@@ -67,8 +67,10 @@
       },
       "totalCost": 14.667,
       "unitCost": 1.22225,
-      "profit": 15,
-      "realProfit": 15
+      "profitProduct": 15,
+      "realProfitProduct": 15,
+      "sugestedPrice": 10,
+      "mediumDiscount": 5
     }
   ],
   "materials": [
@@ -203,6 +205,7 @@
   ],
   "markUps": [
     {
+      "id": "1",
       "name": "SEM ST",
       "taxes": 13,
       "commission": 8.7,
@@ -213,9 +216,10 @@
       "marketing": 2,
       "bonus": 2,
       "profit": 15,
-      "id": "1"
+      "coef": 2.6109660574412534
     },
     {
+      "id": "2",
       "name": "COM ST",
       "taxes": 6,
       "commission": 8.7,
@@ -226,20 +230,21 @@
       "marketing": 2,
       "bonus": 2,
       "profit": 15,
-      "id": "2"
+      "coef": 2.207505518763797
     },
     {
+      "id": "3",
       "name": "TAUSTE",
       "taxes": 12,
       "commission": 2,
-      "admin": 4,
+      "admin": 5,
       "freight": 7,
-      "financial": 4,
+      "financial": 3,
       "promoters": 2,
       "marketing": 2,
-      "bonus": 0,
+      "bonus": 2,
       "profit": 15,
-      "id": "3"
+      "coef": 2
     }
   ],
   "infoProducts": [
@@ -520,7 +525,7 @@
       "id": "id520",
       "cod": "499",
       "name": "ESPONJA COCO PEQUENA",
-      "priceList": 11.0,
+      "priceList": 11,
       "mediumPrice": 10.34
     },
     {
@@ -649,9 +654,27 @@
       "priceList": 5.49,
       "mediumPrice": 5.4
     },
-    { "id": "id560", "cod": "352", "name": "LUVA GRANDE", "priceList": 7.12, "mediumPrice": 6.76 },
-    { "id": "id555", "cod": "349", "name": "LUVA MEDIA", "priceList": 7.12, "mediumPrice": 6.74 },
-    { "id": "id346", "cod": "348", "name": "LUVA PEQUENA", "priceList": 7.12, "mediumPrice": 6.78 },
+    {
+      "id": "id560",
+      "cod": "352",
+      "name": "LUVA GRANDE",
+      "priceList": 7.12,
+      "mediumPrice": 6.76
+    },
+    {
+      "id": "id555",
+      "cod": "349",
+      "name": "LUVA MEDIA",
+      "priceList": 7.12,
+      "mediumPrice": 6.74
+    },
+    {
+      "id": "id346",
+      "cod": "348",
+      "name": "LUVA PEQUENA",
+      "priceList": 7.12,
+      "mediumPrice": 6.78
+    },
     {
       "id": "id345",
       "cod": "620",
@@ -733,7 +756,7 @@
       "id": "id622",
       "cod": "4074",
       "name": "PENEIRA 70 MM C/CB",
-      "priceList": 3.0,
+      "priceList": 3,
       "mediumPrice": 2.83
     },
     {
@@ -775,7 +798,7 @@
       "id": "id4078",
       "cod": "67",
       "name": "POTE PLAST. 500ML - DONA XEPA",
-      "priceList": 6.0,
+      "priceList": 6,
       "mediumPrice": 5.84
     },
     {
@@ -820,7 +843,13 @@
       "priceList": 7.88,
       "mediumPrice": 7.45
     },
-    { "id": "id40", "cod": "579", "name": "RALA PE MAD.", "priceList": 7.88, "mediumPrice": 7.42 },
+    {
+      "id": "id40",
+      "cod": "579",
+      "name": "RALA PE MAD.",
+      "priceList": 7.88,
+      "mediumPrice": 7.42
+    },
     {
       "id": "id600",
       "cod": "583",
@@ -979,7 +1008,7 @@
       "id": "id511",
       "cod": "538",
       "name": "SCOVY VASO C/POTE",
-      "priceList": 12.0,
+      "priceList": 12,
       "mediumPrice": 10.95
     },
     {
@@ -1059,7 +1088,13 @@
       "priceList": 25.73,
       "mediumPrice": 24.99
     },
-    { "id": "id159", "cod": "117", "name": "VAS. LIZA", "priceList": 14.78, "mediumPrice": 14.18 },
+    {
+      "id": "id159",
+      "cod": "117",
+      "name": "VAS. LIZA",
+      "priceList": 14.78,
+      "mediumPrice": 14.18
+    },
     {
       "id": "id105",
       "cod": "104",
