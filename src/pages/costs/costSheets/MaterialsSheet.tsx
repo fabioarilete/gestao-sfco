@@ -92,6 +92,7 @@ export const MaterialsSheet = ({ cost, removeMaterial, setCost }: Props) => {
               removeMaterial={removeMaterial}
               material={materialToEdit}
               onCloseModal={handleCloseModal}
+              handleSubmit={handleSubmit}
             />
           </Modal>
         )}

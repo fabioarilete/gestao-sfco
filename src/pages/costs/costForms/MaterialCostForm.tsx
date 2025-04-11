@@ -12,6 +12,7 @@ interface Props {
   setCost: React.Dispatch<React.SetStateAction<ICost>>;
   onCloseModal: () => void;
   removeMaterial(materialId: string): void;
+  handleSubmit(cost: ICost): void;
 }
 
 export const MaterialCostForm = ({
@@ -50,8 +51,8 @@ export const MaterialCostForm = ({
     return materials.find(item => item.id === selectedMaterialId) || null;
   }, [selectedMaterialId, materials]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  function handleSubmit(e: any) {
+    e.preventDefault();
     if (!selectedMaterialId) {
       alert('Por favor, selecione um material.');
       return;
@@ -88,7 +89,7 @@ export const MaterialCostForm = ({
       setSelectedMaterialId(undefined);
     }
     onCloseModal();
-  };
+  }
 
   if (loading)
     return (
@@ -175,7 +176,13 @@ export const MaterialCostForm = ({
           </Grid>
         </Grid>
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button type="submit" variant="contained" color="primary" form="material-form">
+          <Button
+            onClick={() => handleSubmit}
+            type="submit"
+            variant="contained"
+            color="primary"
+            form="material-form"
+          >
             Salvar
           </Button>
           <Button variant="outlined" color="secondary" onClick={onCloseModal} sx={{ ml: 1 }}>

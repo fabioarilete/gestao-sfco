@@ -1,5 +1,4 @@
-import { Box, Grid, Typography, Paper, Stack, IconButton, Divider } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Box, Grid, Typography, Paper, Stack, Divider } from '@mui/material';
 import logo from '../../../shared/img/logosf.png';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { ICost } from '../CostService';
@@ -14,7 +13,7 @@ interface Props {
 }
 
 export const HeaderSheet = ({ cost, setCost, markUp }: Props) => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(true);
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -44,6 +43,7 @@ export const HeaderSheet = ({ cost, setCost, markUp }: Props) => {
             cost={cost}
             setCost={setCost}
             markUp={markUp}
+            handleSubmit={handleSubmit}
             onCloseModal={handleCloseModal}
           />
         </Modal>

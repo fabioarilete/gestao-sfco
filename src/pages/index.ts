@@ -21,11 +21,10 @@ export * from './products/ProductsService';
 
 export * from './costs/CostService';
 export * from './costs/InitialCostState';
-export * from './costs/costSheets/costComponents/Results'
+export * from './costs/costSheets/costComponents/Results';
 
 export * from './costs/NewCost';
 
-export * from './costs/costSheets/CostSheet';
 export * from './costs/costSheets/HeaderSheet';
 export * from './costs/costSheets/MaterialsSheet';
 export * from './costs/costSheets/NormalOperationsSheet';

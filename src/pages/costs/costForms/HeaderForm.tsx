@@ -22,9 +22,16 @@ interface Props {
   setCost: Dispatch<SetStateAction<ICost>>;
   onCloseModal: () => void;
   markUp?: IMarkUp;
+  handleSubmit(cost: ICost): void;
 }
 
-export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markUp }) => {
+export const HeaderForm: React.FC<Props> = ({
+  cost,
+  setCost,
+  onCloseModal,
+  markUp,
+  handleSubmit,
+}) => {
   const [markUps, setMarkUps] = useState<IMarkUp[]>([]);
   const [informations, setInformations] = useState<IInfoProductsList[]>([]);
   const [loading, setLoading] = useState(false);
@@ -77,8 +84,8 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markU
     return markUps.find(item => item.id === selectedMarkUpId) || null;
   }, [selectedMarkUpId, markUps]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  function addHeader(e: any) {
+    e.preventDefault();
     if (!selectedMarkUp) {
       alert('Por favor, selecione um MarkUp válido.');
       return;
@@ -99,6 +106,11 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markU
       coef: selectedMarkUp.coef ?? 0,
     };
 
+    if (!selectedProduct) {
+      alert('Selecione um produto válido');
+      return;
+    }
+
     const updatedCost = {
       ...cost,
       markUpProduct: markUpChosen,
@@ -107,7 +119,12 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markU
 
     setCost(updatedCost);
     onCloseModal();
-  };
+  }
+
+  function _handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    handleSubmit({ ...cost });
+  }
 
   if (loading) {
     return (
@@ -130,8 +147,8 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markU
       <Typography variant="h6" gutterBottom>
         Cadastro de Custo
       </Typography>
-      <form id="header-form" onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
+      <form id="header-form" onSubmit={_handleSubmit}>
+        <Grid xs={12} container spacing={2}>
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -253,7 +270,13 @@ export const HeaderForm: React.FC<Props> = ({ cost, setCost, onCloseModal, markU
           </Grid>
         </Grid>
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button type="submit" variant="contained" color="primary" form="header-form">
+          <Button
+            onClick={() => addHeader}
+            type="submit"
+            variant="contained"
+            color="primary"
+            form="header-form"
+          >
             Salvar
           </Button>
           <Button variant="outlined" color="secondary" onClick={onCloseModal} sx={{ ml: 1 }}>
